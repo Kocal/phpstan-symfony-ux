@@ -1,0 +1,42 @@
+{
+    "name": "kocal/phpstan-symfony-ux",
+    "description": "PHPStan rules for Symfony UX",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hugo Alliaume",
+            "email": "hugo@alliau.me"
+        }
+    ],
+    "scripts": {
+        "phpstan": "vendor/bin/phpstan analyze",
+        "test": "vendor/bin/phpunit",
+        "cs": "vendor/bin/ecs check",
+        "cs-fix": "vendor/bin/ecs check --fix"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kocal\\PHPStanSymfonyUX\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kocal\\PHPStanSymfonyUX\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.2",
+        "phpstan/phpstan": "^2.1.13"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0",
+        "symfony/ux-twig-component": "^2.0",
+        "symplify/easy-coding-standard": "^13.0"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

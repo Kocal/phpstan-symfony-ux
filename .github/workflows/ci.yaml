@@ -1,0 +1,89 @@
+name: CI
+
+defaults:
+    run:
+        shell: bash
+
+on:
+    push:
+        branches: [ main ]
+    pull_request:
+        branches: [ main ]
+        types: [ opened, synchronize, reopened, ready_for_review ]
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
+
+jobs:
+    coding_style:
+        name: Code Style
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v4
+
+            -   name: Install PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: 8.2
+                    tools: symfony-cli
+
+            -   name: Install Composer dependencies
+                run: symfony composer install --prefer-dist --no-interaction --no-progress
+
+            -   name: Check Coding Style
+                run: symfony composer run cs
+
+    phpstan:
+        name: PHPStan Analysis
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v4
+
+            -   name: Install PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: 8.2
+                    tools: symfony-cli
+
+            -   name: Install Composer dependencies
+                run: symfony composer install --prefer-dist --no-interaction --no-progress
+
+            -   name: Run PHPStan
+                run: symfony composer run phpstan
+
+    tests:
+        name: Tests
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                php: [ '8.2', '8.3', '8.4', '8.5' ]
+                composer-dependency-version: ['']
+                composer-minimum-stability: ['stable']
+                include:
+                    # Lowest dependencies on minimum supported PHP version
+                    - php: '8.2'
+                      composer-dependency-version: 'lowest'
+
+                    # Highest dev dependencies
+                    - php: '8.5'
+                      composer-minimum-stability: 'dev'
+        steps:
+            -   uses: actions/checkout@v4
+
+            -   name: Install PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: 8.2
+                    tools: symfony-cli
+
+
+            -  name: Configure Composer minimum-stability
+               if: matrix.composer-minimum-stability
+               run: symfony composer config minimum-stability ${{ matrix.composer-minimum-stability }}
+
+            -   name: Install Composer dependencies
+                run: symfony composer update --prefer-dist --no-interaction --no-progress ${{ matrix.composer-dependency-version == 'lowest' && '--prefer-lowest' || '' }}
+
+            -   name: Run PHPUnit tests
+                run: symfony composer run test
