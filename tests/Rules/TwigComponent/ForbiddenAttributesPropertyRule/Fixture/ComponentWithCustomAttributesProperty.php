@@ -7,7 +7,7 @@ namespace Kocal\PHPStanSymfonyUX\Tests\Rules\TwigComponent\ForbiddenAttributesPr
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(attributesVar: 'customAttributes')]
-final class ComponentWithAttributesProperty
+final class ComponentWithCustomAttributesProperty
 {
     public string $customAttributes;
 }

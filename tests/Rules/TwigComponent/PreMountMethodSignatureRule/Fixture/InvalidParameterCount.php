@@ -8,11 +8,10 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 #[AsTwigComponent]
-final class InvalidWithNullableReturnType
+final class InvalidParameterCount
 {
     #[PreMount]
-    public function preMount(array $data): ?array
+    public function preMountTooManyParams(array $data, array $extra): void
     {
-        return $data;
     }
 }

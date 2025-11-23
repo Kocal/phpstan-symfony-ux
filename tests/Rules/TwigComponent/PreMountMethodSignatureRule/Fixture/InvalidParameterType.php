@@ -8,11 +8,15 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 #[AsTwigComponent]
-final class InvalidNoReturnType
+final class InvalidParameterType
 {
     #[PreMount]
-    public function preMount(array $data)
+    public function preMountWrongType(string $data): void
     {
-        return $data;
+    }
+
+    #[PreMount]
+    public function preMountIntType(int $data): void
+    {
     }
 }

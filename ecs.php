@@ -14,7 +14,7 @@ return ECSConfig::configure()
     ->withPreparedSets(psr12: true, common: true)
     ->withSkip([
         ProtectedToPrivateFixer::class => [
-            __DIR__ . '/tests/Rules/TwigComponent/MethodsShouldBePublicOrPrivateRule/Fixture/*',
+            __DIR__ . '/tests/Rules/**/Fixture/*',
         ],
     ])
 ;

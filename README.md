@@ -346,6 +346,185 @@ final class Alert
 
 <br>
 
+### PostMountMethodSignatureRule
+
+Enforces that methods with the `#[PostMount]` attribute have the correct signature: they must be public with an optional parameter of type `array`, and a return type of `array`, `void`, or `array|void`.
+This ensures proper integration with the Symfony UX TwigComponent lifecycle hooks.
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\PostMountMethodSignatureRule
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
+
+#[AsTwigComponent]
+final class Alert
+{
+    #[PostMount]
+    protected function postMount(): void
+    {
+    }
+}
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
+
+#[AsTwigComponent]
+final class Alert
+{
+    #[PostMount]
+    public function postMount(array $data): string
+    {
+        return 'invalid';
+    }
+}
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
+
+#[AsTwigComponent]
+final class Alert
+{
+    #[PostMount]
+    public function postMount(string $data): void
+    {
+    }
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
+
+#[AsTwigComponent]
+final class Alert
+{
+    #[PostMount]
+    public function postMount(): void
+    {
+    }
+}
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
+
+#[AsTwigComponent]
+final class Alert
+{
+    #[PostMount]
+    public function postMount(array $data): array
+    {
+        return $data;
+    }
+}
+```
+
+:+1:
+
+<br>
+
+### PreMountMethodSignatureRule
+
+Enforces that methods with the `#[PreMount]` attribute have the correct signature: they must be public and have exactly one parameter of type `array`, with a return type of `array`, `void`, or `array|void` .
+This ensures proper integration with the Symfony UX TwigComponent lifecycle hooks.
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\PreMountMethodSignatureRule
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\PreMount;
+
+#[AsTwigComponent]
+final class Alert
+{
+    #[PreMount]
+    protected function preMount(array $data): array
+    {
+        return $data;
+    }
+}
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\PreMount;
+
+#[AsTwigComponent]
+final class Alert
+{
+    #[PreMount]
+    public function preMount(string $data): array
+    {
+        return [];
+    }
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\PreMount;
+
+#[AsTwigComponent]
+final class Alert
+{
+    #[PreMount]
+    public function preMount(array $data): array
+    {
+        $data['timestamp'] = time();
+
+        return $data;
+    }
+}
+```
+
+:+1:
+
+<br>
+
 ### PublicPropertiesShouldBeCamelCaseRule
 
 Enforces that all public properties in Twig Components follow camelCase naming convention.
@@ -398,97 +577,6 @@ final class Alert
 {
     public string $userName;
     public bool $isActive;
-}
-```
-
-:+1:
-
-<br>
-
-### PreMountMethodSignatureRule
-
-Enforces that methods with the `#[PreMount]` attribute have the correct signature: they must be public and have exactly one parameter of type `array`, with a return type of `array`.
-This ensures proper integration with the Symfony UX TwigComponent lifecycle hooks.
-
-```yaml
-rules:
-    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\PreMountMethodSignatureRule
-```
-
-```php
-// src/Twig/Components/Alert.php
-namespace App\Twig\Components;
-
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Attribute\PreMount;
-
-#[AsTwigComponent]
-final class Alert
-{
-    #[PreMount]
-    protected function preMount(array $data): array
-    {
-        return $data;
-    }
-}
-```
-
-```php
-// src/Twig/Components/Alert.php
-namespace App\Twig\Components;
-
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Attribute\PreMount;
-
-#[AsTwigComponent]
-final class Alert
-{
-    #[PreMount]
-    public function preMount(array $data): void
-    {
-    }
-}
-```
-
-```php
-// src/Twig/Components/Alert.php
-namespace App\Twig\Components;
-
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Attribute\PreMount;
-
-#[AsTwigComponent]
-final class Alert
-{
-    #[PreMount]
-    public function preMount(string $data): array
-    {
-        return [];
-    }
-}
-```
-
-:x:
-
-<br>
-
-```php
-// src/Twig/Components/Alert.php
-namespace App\Twig\Components;
-
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Attribute\PreMount;
-
-#[AsTwigComponent]
-final class Alert
-{
-    #[PreMount]
-    public function preMount(array $data): array
-    {
-        $data['timestamp'] = time();
-
-        return $data;
-    }
 }
 ```
 

@@ -8,11 +8,15 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 #[AsTwigComponent]
-final class InvalidNoParameter
+final class InvalidVisibility
 {
     #[PreMount]
-    public function preMount(): array
+    protected function preMountProtected(): void
     {
-        return [];
+    }
+
+    #[PreMount]
+    private function preMountPrivate(): void
+    {
     }
 }

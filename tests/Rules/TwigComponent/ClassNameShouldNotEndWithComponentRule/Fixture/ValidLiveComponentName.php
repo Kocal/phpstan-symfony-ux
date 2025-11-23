@@ -7,6 +7,6 @@ namespace Kocal\PHPStanSymfonyUX\Tests\Rules\TwigComponent\ClassNameShouldNotEnd
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
 #[AsLiveComponent]
-final class Counter
+final class ValidLiveComponentName
 {
 }

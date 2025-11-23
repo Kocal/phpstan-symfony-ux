@@ -9,8 +9,8 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 final class NotAComponent
 {
     #[PreMount]
-    public function preMount(array $data): array
+    private function preMount(string $data): string
     {
-        return $data;
+        return '';
     }
 }
