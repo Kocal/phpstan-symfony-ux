@@ -45,7 +45,7 @@ final class ForbiddenAttributesPropertyRule implements Rule
                         ? sprintf('Using property "%s" in a Twig component is forbidden, it may lead to confusion with the "%s" attribute defined in #[AsTwigComponent].', $attributesVarName['name'], $attributesVarName['name'])
                         : sprintf('Using property "%s" in a Twig component is forbidden, it may lead to confusion with the default "attributes" Twig variable.', $attributesVarName['name'])
                 )
-                    ->identifier('SymfonyUX.TwigComponent.forbiddenAttributesProperty')
+                    ->identifier('symfonyUX.twigComponent.forbiddenAttributesProperty')
                     ->line($propertyAttributes->getLine())
                     ->tip('Consider renaming or removing this property to avoid conflicts with the Twig component attributes.')
                     ->build(),
