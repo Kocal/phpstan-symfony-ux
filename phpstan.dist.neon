@@ -1,9 +1,17 @@
-includes:
-    - ./phpstan-baseline.neon
-
 parameters:
     level: max
 
     paths:
         - src
         - tests
+
+    ignoreErrors:
+        -
+            paths:
+                - tests/**/Fixture/*
+            identifiers:
+                - method.unused
+                - missingType.iterableValue
+                - missingType.return
+                - property.unused
+                - return.unusedType
