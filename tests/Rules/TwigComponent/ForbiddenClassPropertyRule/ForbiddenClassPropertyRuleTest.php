@@ -8,6 +8,9 @@ use Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ForbiddenClassPropertyRule;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 
+/**
+ * @extends RuleTestCase<ForbiddenClassPropertyRule>
+ */
 final class ForbiddenClassPropertyRuleTest extends RuleTestCase
 {
     public function testViolations(): void
@@ -30,14 +33,20 @@ final class ForbiddenClassPropertyRuleTest extends RuleTestCase
             [__DIR__ . '/Fixture/NotAComponent.php'],
             []
         );
+
         $this->analyse(
             [__DIR__ . '/Fixture/ComponentWithNoClassProperty.php'],
             []
         );
     }
 
+    public static function getAdditionalConfigFiles(): array
+    {
+        return [__DIR__ . '/config/configured_rule.neon'];
+    }
+
     protected function getRule(): Rule
     {
-        return new ForbiddenClassPropertyRule();
+        return self::getContainer()->getByType(ForbiddenClassPropertyRule::class);
     }
 }

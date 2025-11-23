@@ -8,8 +8,8 @@ use PhpParser\Node\Attribute;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\ClassLike;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Property;
-use PHPStan\Node\ClassMethod;
 
 /**
  * Heavily inspired by https://github.com/symplify/phpstan-rules/blob/main/src/NodeAnalyzer/AttributeFinder.php <3

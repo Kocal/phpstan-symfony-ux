@@ -8,6 +8,9 @@ use Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ForbiddenAttributesPropertyRule;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 
+/**
+ * @extends RuleTestCase<ForbiddenAttributesPropertyRule>
+ */
 final class ForbiddenAttributesPropertyRuleTest extends RuleTestCase
 {
     public function testViolations(): void
@@ -41,14 +44,20 @@ final class ForbiddenAttributesPropertyRuleTest extends RuleTestCase
             [__DIR__ . '/Fixture/NotAComponent.php'],
             []
         );
+
         $this->analyse(
             [__DIR__ . '/Fixture/ComponentWithNoAttributesProperty.php'],
             []
         );
     }
 
+    public static function getAdditionalConfigFiles(): array
+    {
+        return [__DIR__ . '/config/configured_rule.neon'];
+    }
+
     protected function getRule(): Rule
     {
-        return new ForbiddenAttributesPropertyRule();
+        return self::getContainer()->getByType(ForbiddenAttributesPropertyRule::class);
     }
 }

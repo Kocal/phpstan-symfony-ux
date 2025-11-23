@@ -6,5 +6,8 @@ namespace Kocal\PHPStanSymfonyUX\Tests\Rules\TwigComponent\ForbiddenAttributesPr
 
 final class NotAComponent
 {
-    public $attributes;
+    /**
+     * @var array<string, mixed>
+     */
+    public array $attributes;
 }

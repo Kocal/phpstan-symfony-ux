@@ -6,5 +6,5 @@ namespace Kocal\PHPStanSymfonyUX\Tests\Rules\TwigComponent\ForbiddenClassPropert
 
 final class NotAComponent
 {
-    public $attributes;
+    public string $class;
 }

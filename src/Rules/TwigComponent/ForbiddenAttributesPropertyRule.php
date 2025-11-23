@@ -8,6 +8,7 @@ use Kocal\PHPStanSymfonyUX\NodeAnalyzer\AttributeFinder;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Analyser\Scope;
+use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -17,6 +18,11 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
  */
 final class ForbiddenAttributesPropertyRule implements Rule
 {
+    public function __construct(
+        private ReflectionProvider $reflectionProvider,
+    ) {
+    }
+
     public function getNodeType(): string
     {
         return Class_::class;
@@ -51,7 +57,7 @@ final class ForbiddenAttributesPropertyRule implements Rule
     }
 
     /**
-     * @return {name: string, custom: false}|null
+     * @return array{name: string, custom: bool}|null
      */
     private function getAttributesVarName(Node\Attribute $attribute): ?array
     {
@@ -66,11 +72,11 @@ final class ForbiddenAttributesPropertyRule implements Rule
             }
         }
 
-        $reflAttribute = new \ReflectionClass(AsTwigComponent::class);
-        foreach ($reflAttribute->getConstructor()->getParameters() as $reflParameter) {
-            if ($reflParameter->getName() === 'attributesVar' && $reflParameter->isDefaultValueAvailable()) {
+        $reflAttribute = $this->reflectionProvider->getClass(AsTwigComponent::class);
+        foreach ($reflAttribute->getConstructor()->getOnlyVariant()->getParameters() as $reflParameter) {
+            if ($reflParameter->getName() === 'attributesVar' && $reflParameter->getDefaultValue()?->getConstantStrings()) {
                 return [
-                    'name' => $reflParameter->getDefaultValue(),
+                    'name' => $reflParameter->getDefaultValue()->getConstantStrings()[0]->getValue(),
                     'custom' => false,
                 ];
             }

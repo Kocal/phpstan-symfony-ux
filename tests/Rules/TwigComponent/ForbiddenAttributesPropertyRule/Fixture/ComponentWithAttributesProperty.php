@@ -9,5 +9,5 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent]
 final class ComponentWithAttributesProperty
 {
-    public $attributes;
+    public string $attributes;
 }
