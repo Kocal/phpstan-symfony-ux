@@ -221,6 +221,76 @@ final class Alert
 
 <br>
 
+### ForbiddenInheritanceRule
+
+Forbids the use of class inheritance in Twig Components. Composition via traits should be used instead.
+This promotes better code reusability and avoids tight coupling between components.
+
+> [!TIP]
+> Another alternative is to use [Class Variant Authority](https://symfony.com/bundles/ux-twig-component/current/index.html#component-with-complex-variants-cva) to create variations of a base component without inheritance or traits,
+> for example `<twig:Alert variant="success"></twig:Alert>` instead of `<twig:AlertSuccess></twig:AlertSuccess>`.
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ForbiddenInheritanceRule
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+abstract class BaseComponent
+{
+    public string $name;
+}
+
+#[AsTwigComponent]
+final class Alert extends BaseComponent
+{
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+trait CommonComponentTrait
+{
+    public string $name;
+}
+
+#[AsTwigComponent]
+final class Alert
+{
+    use CommonComponentTrait;
+}
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+final class Alert
+{
+    public string $name;
+}
+```
+
+:+1:
+
+<br>
+
 ### PublicPropertiesShouldBeCamelCaseRule
 
 Enforces that all public properties in Twig Components follow camelCase naming convention.
