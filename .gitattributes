@@ -2,4 +2,8 @@
 /phpunit.dist.xml export-ignore
 /tests export-ignore
 /.editorconfig export-ignore
-/phpunit.dist.xml
+/AGENTS.md export-ignore
+/ecs.php export-ignore
+/phpstan.dist.neon export-ignore
+/phpstan-baseline.neon export-ignore
+/phpunit.dist.xml export-ignore

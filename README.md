@@ -220,3 +220,62 @@ final class Alert
 :+1:
 
 <br>
+
+### PublicPropertiesShouldBeCamelCaseRule
+
+Enforces that all public properties in Twig Components follow camelCase naming convention.
+This ensures consistency and better integration with Twig templates where properties are passed and accessed using camelCase.
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\PublicPropertiesShouldBeCamelCaseRule
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+final class Alert
+{
+    public string $user_name;
+    public bool $is_active;
+}
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+final class Alert
+{
+    public string $UserName;
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+final class Alert
+{
+    public string $userName;
+    public bool $isActive;
+}
+```
+
+:+1:
+
+<br>

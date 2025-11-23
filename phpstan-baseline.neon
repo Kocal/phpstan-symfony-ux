@@ -1,0 +1,13 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Property Kocal\\PHPStanSymfonyUX\\Tests\\Rules\\TwigComponent\\PublicPropertiesShouldBeCamelCaseRule\\Fixture\\ComponentWithPrivateNonCamelCaseProperties\:\:\$is_active is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: tests/Rules/TwigComponent/PublicPropertiesShouldBeCamelCaseRule/Fixture/ComponentWithPrivateNonCamelCaseProperties.php
+
+		-
+			message: '#^Property Kocal\\PHPStanSymfonyUX\\Tests\\Rules\\TwigComponent\\PublicPropertiesShouldBeCamelCaseRule\\Fixture\\ComponentWithPrivateNonCamelCaseProperties\:\:\$user_name is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: tests/Rules/TwigComponent/PublicPropertiesShouldBeCamelCaseRule/Fixture/ComponentWithPrivateNonCamelCaseProperties.php
