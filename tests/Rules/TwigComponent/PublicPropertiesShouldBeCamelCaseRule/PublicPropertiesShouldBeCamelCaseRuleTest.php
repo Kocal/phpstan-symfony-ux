@@ -41,6 +41,22 @@ final class PublicPropertiesShouldBeCamelCaseRuleTest extends RuleTestCase
                 ],
             ]
         );
+
+        $this->analyse(
+            [__DIR__ . '/Fixture/LiveComponentWithSnakeCaseProperty.php'],
+            [
+                [
+                    'Public property "user_name" in a Twig component should be in camelCase.',
+                    12,
+                    'Consider renaming "user_name" to "userName".',
+                ],
+                [
+                    'Public property "is_active" in a Twig component should be in camelCase.',
+                    14,
+                    'Consider renaming "is_active" to "isActive".',
+                ],
+            ]
+        );
     }
 
     public function testNoViolations(): void
@@ -57,6 +73,11 @@ final class PublicPropertiesShouldBeCamelCaseRuleTest extends RuleTestCase
 
         $this->analyse(
             [__DIR__ . '/Fixture/ComponentWithPrivateNonCamelCaseProperties.php'],
+            []
+        );
+
+        $this->analyse(
+            [__DIR__ . '/Fixture/LiveComponentWithCamelCaseProperties.php'],
             []
         );
     }

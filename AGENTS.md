@@ -2,7 +2,10 @@
 
 ## Project Overview
 
-This project contains custom PHPStan rules to improve static analysis of Symfony UX applications, particularly for Twig components.
+This project contains custom PHPStan rules to improve static analysis of Symfony UX applications, particularly for Twig components and Live components.
+
+> [!NOTE]
+> All TwigComponent rules also apply to LiveComponents (classes annotated with `#[AsLiveComponent]`), since LiveComponents are enhanced TwigComponents.
 
 ## Project Structure
 
@@ -37,6 +40,7 @@ use PhpParser\Node\Stmt\Class_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 /**
@@ -51,7 +55,7 @@ final class MyRuleRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        if (! AttributeFinder::findAttribute($node, AsTwigComponent::class)) {
+        if (! AttributeFinder::findAnyAttribute($node, [AsTwigComponent::class, AsLiveComponent::class])) {
             return [];
         }
 
@@ -149,9 +153,9 @@ rules:
 ```
 
 #### Fixtures:
-- **InvalidCase.php**: Example that violates the rule
-- **ValidCase.php**: Example that complies with the rule
-- **NotAComponent.php**: Class without `#[AsTwigComponent]` (should not trigger an error)
+- **InvalidCase.php**: Example that violates the rule (both for TwigComponent and LiveComponent)
+- **ValidCase.php**: Example that complies with the rule (both for TwigComponent and LiveComponent)
+- **NotAComponent.php**: Class without `#[AsTwigComponent]` or `#[AsLiveComponent]` (should not trigger an error)
 
 ### 3. Document the rule in `README.md`
 

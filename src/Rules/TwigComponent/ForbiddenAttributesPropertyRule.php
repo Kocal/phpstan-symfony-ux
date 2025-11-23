@@ -11,6 +11,7 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 /**
@@ -30,24 +31,34 @@ final class ForbiddenAttributesPropertyRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        if (! $asTwigComponent = AttributeFinder::findAttribute($node, AsTwigComponent::class)) {
+        if (! $attribute = AttributeFinder::findAnyAttribute($node, [AsTwigComponent::class, AsLiveComponent::class])) {
             return [];
         }
 
-        if (! $attributesVarName = $this->getAttributesVarName($asTwigComponent)) {
+        if (! $attributesVarName = $this->getAttributesVarName($attribute)) {
             return [];
         }
 
         if ($propertyAttributes = $node->getProperty($attributesVarName['name'])) {
+            $attributeName = $attribute->name->getLast();
+            $attributeNameHumanReadable = match ($attributeName) {
+                'AsTwigComponent' => 'Twig component',
+                'AsLiveComponent' => 'Live component',
+                default => 'component',
+            };
+
             return [
                 RuleErrorBuilder::message(
                     $attributesVarName['custom']
-                        ? sprintf('Using property "%s" in a Twig component is forbidden, it may lead to confusion with the "%s" attribute defined in #[AsTwigComponent].', $attributesVarName['name'], $attributesVarName['name'])
-                        : sprintf('Using property "%s" in a Twig component is forbidden, it may lead to confusion with the default "attributes" Twig variable.', $attributesVarName['name'])
+                        ? sprintf('Using property "%s" in a %s is forbidden, it may lead to confusion with the "%s" attribute defined in #[%s].', $attributesVarName['name'], $attributeNameHumanReadable, $attributesVarName['name'], $attribute->name->getLast())
+                        : sprintf('Using property "%s" in a %s is forbidden, it may lead to confusion with the default "attributes" Twig variable.', $attributesVarName['name'], $attributeNameHumanReadable)
                 )
                     ->identifier('symfonyUX.twigComponent.forbiddenAttributesProperty')
                     ->line($propertyAttributes->getLine())
-                    ->tip('Consider renaming or removing this property to avoid conflicts with the Twig component attributes.')
+                    ->tip(sprintf(
+                        'Consider renaming or removing this property to avoid conflicts with the %s attributes.',
+                        $attributeNameHumanReadable,
+                    ))
                     ->build(),
 
             ];

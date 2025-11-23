@@ -25,6 +25,17 @@ final class ForbiddenInheritanceRuleTest extends RuleTestCase
                 ],
             ]
         );
+
+        $this->analyse(
+            [__DIR__ . '/Fixture/LiveComponentWithInheritance.php'],
+            [
+                [
+                    'Using class inheritance in a Twig component is forbidden, use traits for composition instead.',
+                    15,
+                    'Consider using traits to share common functionality between Twig components.',
+                ],
+            ]
+        );
     }
 
     public function testNoViolations(): void
@@ -41,6 +52,11 @@ final class ForbiddenInheritanceRuleTest extends RuleTestCase
 
         $this->analyse(
             [__DIR__ . '/Fixture/ComponentUsingTrait.php'],
+            []
+        );
+
+        $this->analyse(
+            [__DIR__ . '/Fixture/LiveComponentWithoutInheritance.php'],
             []
         );
     }
