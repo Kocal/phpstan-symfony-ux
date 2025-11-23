@@ -21,6 +21,63 @@ Each rule can be enabled individually by adding it to your `phpstan.dist.neon` c
 > [!NOTE]
 > All these rules also apply to LiveComponents (classes annotated with `#[AsLiveComponent]`).
 
+### ClassMustBeFinalRule
+
+Enforces that all Twig Component classes must be declared as `final`.
+This prevents inheritance and promotes composition via traits, ensuring better code maintainability and avoiding tight coupling between components.
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ClassMustBeFinalRule
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+class Alert
+{
+    public string $message;
+}
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+abstract class Alert
+{
+    public string $message;
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+final class Alert
+{
+    public string $message;
+}
+```
+
+:+1:
+
+<br>
+
 ### ClassNameShouldNotEndWithComponentRule
 
 Forbid Twig Component class names from ending with "Component" suffix, as it creates redundancy since the class is already identified as a component through the `#[AsTwigComponent]` attribute.
@@ -223,76 +280,6 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent]
 final class Alert
 {
-}
-```
-
-:+1:
-
-<br>
-
-### ForbiddenInheritanceRule
-
-Forbids the use of class inheritance in Twig Components. Composition via traits should be used instead.
-This promotes better code reusability and avoids tight coupling between components.
-
-> [!TIP]
-> Another alternative is to use [Class Variant Authority](https://symfony.com/bundles/ux-twig-component/current/index.html#component-with-complex-variants-cva) to create variations of a base component without inheritance or traits,
-> for example `<twig:Alert variant="success"></twig:Alert>` instead of `<twig:AlertSuccess></twig:AlertSuccess>`.
-
-```yaml
-rules:
-    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ForbiddenInheritanceRule
-```
-
-```php
-// src/Twig/Components/Alert.php
-namespace App\Twig\Components;
-
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-
-abstract class BaseComponent
-{
-    public string $name;
-}
-
-#[AsTwigComponent]
-class Alert extends BaseComponent
-{
-}
-```
-
-:x:
-
-<br>
-
-```php
-// src/Twig/Components/Alert.php
-namespace App\Twig\Components;
-
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-
-trait CommonComponentTrait
-{
-    public string $name;
-}
-
-#[AsTwigComponent]
-final class Alert
-{
-    use CommonComponentTrait;
-}
-```
-
-```php
-// src/Twig/Components/Alert.php
-namespace App\Twig\Components;
-
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-
-#[AsTwigComponent]
-final class Alert
-{
-    public string $name;
 }
 ```
 
