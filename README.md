@@ -79,3 +79,46 @@ final class Alert
 :+1:
 
 <br>
+
+### ForbiddenClassPropertyRule
+
+Forbid the use of the `$class` property in Twig Components, as it is considered a bad practice to manipulate CSS classes directly in components.
+Use `{{ attributes }}` or `{{ attributes.defaults({ class: '...' }) }}` in your Twig templates instead.
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ForbiddenClassPropertyRule
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+final class Alert
+{
+    public $class;
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+final class Alert
+{
+}
+```
+
+:+1:
+
+<br>
