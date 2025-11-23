@@ -256,7 +256,7 @@ abstract class BaseComponent
 }
 
 #[AsTwigComponent]
-final class Alert extends BaseComponent
+class Alert extends BaseComponent
 {
 }
 ```
@@ -293,6 +293,65 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 final class Alert
 {
     public string $name;
+}
+```
+
+:+1:
+
+<br>
+
+### MethodsShouldBePublicOrPrivateRule
+
+Enforces that all methods in Twig Components are either public or private, but not protected.
+Since Twig Components must be final classes and inheritance is forbidden (see `ForbiddenInheritanceRule`), protected methods serve no purpose and should be avoided.
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\MethodsShouldBePublicOrPrivateRule
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+final class Alert
+{
+    public string $message;
+
+    protected function formatMessage(): string
+    {
+        return strtoupper($this->message);
+    }
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+final class Alert
+{
+    public string $message;
+
+    public function formatMessage(): string
+    {
+        return strtoupper($this->message);
+    }
+
+    private function helperMethod(): void
+    {
+        // ...
+    }
 }
 ```
 
