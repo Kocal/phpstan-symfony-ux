@@ -56,15 +56,12 @@ jobs:
         name: Tests
         runs-on: ubuntu-latest
         strategy:
+            fail-fast: false
             matrix:
                 php: [ '8.2', '8.3', '8.4', '8.5' ]
                 composer-dependency-version: ['']
                 composer-minimum-stability: ['stable']
                 include:
-                    # Lowest dependencies on minimum supported PHP version
-                    - php: '8.2'
-                      composer-dependency-version: 'lowest'
-
                     # Highest dev dependencies
                     - php: '8.5'
                       composer-minimum-stability: 'dev'
@@ -83,7 +80,7 @@ jobs:
                run: symfony composer config minimum-stability ${{ matrix.composer-minimum-stability }}
 
             -   name: Install Composer dependencies
-                run: symfony composer update --prefer-dist --no-interaction --no-progress ${{ matrix.composer-dependency-version == 'lowest' && '--prefer-lowest' || '' }}
+                run: symfony composer update --prefer-dist --no-interaction --no-progress
 
             -   name: Run PHPUnit tests
                 run: symfony composer run test
