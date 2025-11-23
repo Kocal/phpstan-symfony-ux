@@ -16,7 +16,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 /**
  * @implements Rule<Class_>
  */
-final class ForbiddenInheritanceRule implements Rule
+final class ClassMustBeFinalRule implements Rule
 {
     public function getNodeType(): string
     {
@@ -29,12 +29,20 @@ final class ForbiddenInheritanceRule implements Rule
             return [];
         }
 
-        if ($node->extends !== null) {
+        if ($node->isAbstract()) {
             return [
-                RuleErrorBuilder::message('Using class inheritance in a Twig component is forbidden, use traits for composition instead.')
-                    ->identifier('symfonyUX.twigComponent.forbiddenClassInheritance')
-                    ->line($node->extends->getLine())
-                    ->tip('Consider using traits to share common functionality between Twig components.')
+                RuleErrorBuilder::message('Twig component class must be final, not abstract.')
+                    ->identifier('symfonyUX.twigComponent.classMustBeFinal')
+                    ->tip('Make the class final and use traits for composition instead of inheritance.')
+                    ->build(),
+            ];
+        }
+
+        if (! $node->isFinal()) {
+            return [
+                RuleErrorBuilder::message('Twig component class must be final.')
+                    ->identifier('symfonyUX.twigComponent.classMustBeFinal')
+                    ->tip('Add the "final" keyword to the class declaration to prevent inheritance.')
                     ->build(),
             ];
         }
