@@ -10,6 +10,7 @@ use PhpParser\Node\Stmt\Class_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 /**
@@ -24,18 +25,24 @@ final class ExposePublicPropsShouldBeFalseRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        if (! $asTwigComponent = AttributeFinder::findAttribute($node, AsTwigComponent::class)) {
+        if (! $attribute = AttributeFinder::findAnyAttribute($node, [AsTwigComponent::class, AsLiveComponent::class])) {
             return [];
         }
 
-        $exposePublicPropsValue = $this->getExposePublicPropsValue($asTwigComponent);
+        $exposePublicPropsValue = $this->getExposePublicPropsValue($attribute);
 
         if ($exposePublicPropsValue !== false) {
             return [
-                RuleErrorBuilder::message('The #[AsTwigComponent] attribute must have its "exposePublicProps" parameter set to false.')
+                RuleErrorBuilder::message(sprintf(
+                    'The #[%s] attribute must have its "exposePublicProps" parameter set to false.',
+                    $attribute->name->getLast(),
+                ))
                     ->identifier('symfonyUX.twigComponent.exposePublicPropsShouldBeFalse')
-                    ->line($asTwigComponent->getLine())
-                    ->tip('Set "exposePublicProps" to false in the #[AsTwigComponent] attribute.')
+                    ->line($attribute->getLine())
+                    ->tip(sprintf(
+                        'Set "exposePublicProps" to false in the #[%s] attribute.',
+                        $attribute->name->getLast()
+                    ))
                     ->build(),
             ];
         }

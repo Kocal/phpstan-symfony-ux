@@ -46,4 +46,26 @@ final class AttributeFinder
 
         return null;
     }
+
+    /**
+     * Find any of the provided attributes.
+     *
+     * @param string[] $desiredAttributeClasses
+     */
+    public static function findAnyAttribute(ClassMethod | Property | ClassLike | Param $node, array $desiredAttributeClasses): ?Attribute
+    {
+        $attributes = self::findAttributes($node);
+
+        foreach ($attributes as $attribute) {
+            if (! $attribute->name instanceof FullyQualified) {
+                continue;
+            }
+
+            if (in_array($attribute->name->toString(), $desiredAttributeClasses, true)) {
+                return $attribute;
+            }
+        }
+
+        return null;
+    }
 }

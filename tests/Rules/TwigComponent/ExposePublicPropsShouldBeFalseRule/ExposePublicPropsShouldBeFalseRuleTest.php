@@ -36,6 +36,17 @@ final class ExposePublicPropsShouldBeFalseRuleTest extends RuleTestCase
                 ],
             ]
         );
+
+        $this->analyse(
+            [__DIR__ . '/Fixture/LiveComponentWithExposePublicPropsTrue.php'],
+            [
+                [
+                    'The #[AsLiveComponent] attribute must have its "exposePublicProps" parameter set to false.',
+                    9,
+                    'Set "exposePublicProps" to false in the #[AsLiveComponent] attribute.',
+                ],
+            ]
+        );
     }
 
     public function testNoViolations(): void
@@ -47,6 +58,11 @@ final class ExposePublicPropsShouldBeFalseRuleTest extends RuleTestCase
 
         $this->analyse(
             [__DIR__ . '/Fixture/ComponentWithExposePublicPropsFalse.php'],
+            []
+        );
+
+        $this->analyse(
+            [__DIR__ . '/Fixture/LiveComponentWithExposePublicPropsFalse.php'],
             []
         );
     }

@@ -36,6 +36,17 @@ final class ForbiddenAttributesPropertyRuleTest extends RuleTestCase
                 ],
             ]
         );
+
+        $this->analyse(
+            [__DIR__ . '/Fixture/LiveComponentWithAttributesProperty.php'],
+            [
+                [
+                    'Using property "attributes" in a Live component is forbidden, it may lead to confusion with the default "attributes" Twig variable.',
+                    12,
+                    'Consider renaming or removing this property to avoid conflicts with the Live component attributes.',
+                ],
+            ]
+        );
     }
 
     public function testNoViolations(): void
@@ -47,6 +58,11 @@ final class ForbiddenAttributesPropertyRuleTest extends RuleTestCase
 
         $this->analyse(
             [__DIR__ . '/Fixture/ComponentWithNoAttributesProperty.php'],
+            []
+        );
+
+        $this->analyse(
+            [__DIR__ . '/Fixture/LiveComponentWithNoAttributesProperty.php'],
             []
         );
     }

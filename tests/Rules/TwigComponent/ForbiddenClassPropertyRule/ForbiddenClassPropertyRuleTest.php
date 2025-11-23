@@ -25,6 +25,17 @@ final class ForbiddenClassPropertyRuleTest extends RuleTestCase
                 ],
             ]
         );
+
+        $this->analyse(
+            [__DIR__ . '/Fixture/LiveComponentWithClassProperty.php'],
+            [
+                [
+                    'Using a "class" property in a Twig component is forbidden, it is considered as an anti-pattern.',
+                    12,
+                    'Consider using {{ attributes }} to automatically render unknown properties as HTML attributes, such as "class". Learn more at https://symfony.com/bundles/ux-twig-component/current/index.html#component-attributes.',
+                ],
+            ]
+        );
     }
 
     public function testNoViolations(): void
@@ -36,6 +47,11 @@ final class ForbiddenClassPropertyRuleTest extends RuleTestCase
 
         $this->analyse(
             [__DIR__ . '/Fixture/ComponentWithNoClassProperty.php'],
+            []
+        );
+
+        $this->analyse(
+            [__DIR__ . '/Fixture/LiveComponentWithNoClassProperty.php'],
             []
         );
     }

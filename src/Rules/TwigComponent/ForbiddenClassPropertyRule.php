@@ -10,6 +10,7 @@ use PhpParser\Node\Stmt\Class_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 /**
@@ -24,7 +25,7 @@ final class ForbiddenClassPropertyRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        if (! AttributeFinder::findAttribute($node, AsTwigComponent::class)) {
+        if (! AttributeFinder::findAnyAttribute($node, [AsTwigComponent::class, AsLiveComponent::class])) {
             return [];
         }
 

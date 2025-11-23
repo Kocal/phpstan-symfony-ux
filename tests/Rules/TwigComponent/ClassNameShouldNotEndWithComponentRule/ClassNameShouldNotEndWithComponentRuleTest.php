@@ -25,6 +25,17 @@ final class ClassNameShouldNotEndWithComponentRuleTest extends RuleTestCase
                 ],
             ]
         );
+
+        $this->analyse(
+            [__DIR__ . '/Fixture/InvalidLiveComponentName.php'],
+            [
+                [
+                    'Twig component class "CounterComponent" should not end with "Component".',
+                    10,
+                    'Remove the "Component" suffix from the class name.',
+                ],
+            ]
+        );
     }
 
     public function testNoViolations(): void
@@ -36,6 +47,11 @@ final class ClassNameShouldNotEndWithComponentRuleTest extends RuleTestCase
 
         $this->analyse(
             [__DIR__ . '/Fixture/ValidComponentName.php'],
+            []
+        );
+
+        $this->analyse(
+            [__DIR__ . '/Fixture/ValidLiveComponentName.php'],
             []
         );
     }

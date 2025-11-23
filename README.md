@@ -1,6 +1,6 @@
 # PHPStan for Symfony UX
 
-A set of PHPStan rules to improve static analysis for Symfony UX applications.
+A set of PHPStan rules to improve static analysis for [Symfony UX](https://github.com/symfony/ux) applications.
 
 ## Installation
 
@@ -10,7 +10,16 @@ To install the PHPStan rules for Symfony UX, you can use Composer:
 composer require --dev kocal/phpstan-symfony-ux
 ```
 
+## Configuration
+
+After installing the package, you need to configure PHPStan to use the rules.
+
+Each rule can be enabled individually by adding it to your `phpstan.dist.neon` configuration file.
+
 ## TwigComponent Rules
+
+> [!NOTE]
+> All these rules also apply to LiveComponents (classes annotated with `#[AsLiveComponent]`).
 
 ### ClassNameShouldNotEndWithComponentRule
 
