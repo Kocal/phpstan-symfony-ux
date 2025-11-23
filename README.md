@@ -53,6 +53,63 @@ final class Alert
 
 <br>
 
+### ExposePublicPropsShouldBeFalseRule
+
+Enforces that the `#[AsTwigComponent]` attribute has its `exposePublicProps` parameter explicitly set to `false`.
+This prevents public properties from being automatically exposed to templates, promoting explicit control over what data is accessible in your Twig components.
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ExposePublicPropsShouldBeFalseRule
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+final class Alert
+{
+    public string $message;
+}
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent(exposePublicProps: true)]
+final class Alert
+{
+    public string $message;
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent(exposePublicProps: false)]
+final class Alert
+{
+    public string $message;
+}
+```
+
+:+1:
+
+<br>
+
 ### ForbiddenAttributesPropertyRule
 
 Forbid the use of the `$attributes` property in Twig Components, which can lead to confusion when using `{{ attributes }}` (an instance of `ComponentAttributes` that is automatically injected) in Twig templates.
