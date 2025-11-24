@@ -92,6 +92,68 @@ final class TodoList
 
 <br>
 
+### LiveListenerMethodsShouldBePublicRule
+
+Enforces that all methods annotated with `#[LiveListener]` in LiveComponents must be declared as public.
+LiveListener methods need to be publicly accessible to be invoked when listening to events from the frontend.
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LiveListenerMethodsShouldBePublicRule
+```
+
+```php
+// src/Twig/Components/Notification.php
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveListener;
+
+#[AsLiveComponent]
+final class Notification
+{
+    #[LiveListener('notification:received')]
+    private function onNotificationReceived(): void
+    {
+    }
+
+    #[LiveListener('notification:dismissed')]
+    protected function onNotificationDismissed(): void
+    {
+    }
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/Notification.php
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveListener;
+
+#[AsLiveComponent]
+final class Notification
+{
+    #[LiveListener('notification:received')]
+    public function onNotificationReceived(): void
+    {
+    }
+
+    #[LiveListener('notification:dismissed')]
+    public function onNotificationDismissed(): void
+    {
+    }
+}
+```
+
+:+1:
+
+<br>
+
 ## TwigComponent Rules
 
 > [!NOTE]
