@@ -14,12 +14,12 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Attribute\PreMount;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 /**
  * @implements Rule<Class_>
  */
-final class PreMountMethodSignatureRule implements Rule
+final class PostMountMethodSignatureRule implements Rule
 {
     public function __construct(
         private ReflectionProvider $reflectionProvider,
@@ -45,11 +45,11 @@ final class PreMountMethodSignatureRule implements Rule
         $reflClass = $this->reflectionProvider->getClass($node->namespacedName->toString());
 
         foreach ($node->getMethods() as $method) {
-            if (! AttributeFinder::findAttribute($method, PreMount::class)) {
+            if (! AttributeFinder::findAttribute($method, PostMount::class)) {
                 continue;
             }
 
-            $errors[] = $this->validatePreMountMethod(
+            $errors[] = $this->validatePostMountMethod(
                 $method,
                 $reflClass->getMethod($method->name->name, $scope),
             );
@@ -61,7 +61,7 @@ final class PreMountMethodSignatureRule implements Rule
     /**
      * @return list<\PHPStan\Rules\IdentifierRuleError>
      */
-    private function validatePreMountMethod(Node\Stmt\ClassMethod $method, ExtendedMethodReflection $reflMethod): array
+    private function validatePostMountMethod(Node\Stmt\ClassMethod $method, ExtendedMethodReflection $reflMethod): array
     {
         $errors = [];
 
@@ -71,8 +71,8 @@ final class PreMountMethodSignatureRule implements Rule
 
         // Check if method is public
         if (! $reflMethod->isPublic()) {
-            $errors[] = RuleErrorBuilder::message(sprintf('Method "%s" with #[PreMount] attribute must be public.', $methodName))
-                ->identifier('symfonyUX.twigComponent.preMountPublic')
+            $errors[] = RuleErrorBuilder::message(sprintf('Method "%s" with #[PostMount] attribute must be public.', $methodName))
+                ->identifier('symfonyUX.twigComponent.postMountPublic')
                 ->line($method->getLine())
                 ->tip('Change the method visibility to public.')
                 ->build();
@@ -80,16 +80,16 @@ final class PreMountMethodSignatureRule implements Rule
 
         // Check parameter count and type (0 or 1 parameter allowed)
         if (count($methodParams) > 1) {
-            $errors[] = RuleErrorBuilder::message(sprintf('Method "%s" with #[PreMount] attribute must have at most one parameter of type "array".', $methodName))
-                ->identifier('symfonyUX.twigComponent.preMountParameterCount')
+            $errors[] = RuleErrorBuilder::message(sprintf('Method "%s" with #[PostMount] attribute must have at most one parameter of type "array".', $methodName))
+                ->identifier('symfonyUX.twigComponent.postMountParameterCount')
                 ->line($method->getLine())
                 ->tip('The method should have zero or one parameter: "array $data" (optional).')
                 ->build();
         } elseif (count($methodParams) === 1) {
             // If there is a parameter, it must be of type array
             if (! $methodParams[0]->getType()->isArray()->yes()) {
-                $errors[] = RuleErrorBuilder::message(sprintf('Method "%s" with #[PreMount] attribute must have a parameter of type "array".', $methodName))
-                    ->identifier('symfonyUX.twigComponent.preMountParameterType')
+                $errors[] = RuleErrorBuilder::message(sprintf('Method "%s" with #[PostMount] attribute must have a parameter of type "array".', $methodName))
+                    ->identifier('symfonyUX.twigComponent.postMountParameterType')
                     ->line($method->getLine())
                     ->tip('Change the parameter type to "array".')
                     ->build();
@@ -102,8 +102,8 @@ final class PreMountMethodSignatureRule implements Rule
             || ($methodReturnType->isArray()->maybe() && $methodReturnType->isVoid()->maybe());
 
         if (! $isValidReturnType) {
-            $errors[] = RuleErrorBuilder::message(sprintf('Method "%s" with #[PreMount] attribute must have a return type of "array", "void", or "array|void".', $methodName))
-                ->identifier('symfonyUX.twigComponent.preMountReturnType')
+            $errors[] = RuleErrorBuilder::message(sprintf('Method "%s" with #[PostMount] attribute must have a return type of "array", "void", or "array|void".', $methodName))
+                ->identifier('symfonyUX.twigComponent.postMountReturnType')
                 ->line($method->getLine())
                 ->tip('Change the return type to ": array", ": void", or ": array|void".')
                 ->build();

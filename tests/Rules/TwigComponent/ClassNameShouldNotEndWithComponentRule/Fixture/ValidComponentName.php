@@ -7,6 +7,6 @@ namespace Kocal\PHPStanSymfonyUX\Tests\Rules\TwigComponent\ClassNameShouldNotEnd
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent]
-final class Alert
+final class ValidComponentName
 {
 }

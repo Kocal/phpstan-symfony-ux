@@ -12,6 +12,4 @@ parameters:
             identifiers:
                 - method.unused
                 - missingType.iterableValue
-                - missingType.return
                 - property.unused
-                - return.unusedType
