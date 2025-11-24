@@ -1,5 +1,9 @@
 # PHPStan for Symfony UX
 
+![Packagist License](https://img.shields.io/packagist/l/kocal/phpstan-symfony-ux)
+![Packagist Version](https://img.shields.io/packagist/v/kocal/phpstan-symfony-ux)
+
+
 A set of PHPStan rules to improve static analysis for [Symfony UX](https://github.com/symfony/ux) applications.
 
 ## Installation
