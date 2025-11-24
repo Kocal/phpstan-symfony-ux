@@ -1,7 +1,7 @@
 {
     "name": "kocal/phpstan-symfony-ux",
     "description": "PHPStan rules for Symfony UX",
-    "type": "library",
+    "type": "phpstan-extension",
     "license": "MIT",
     "authors": [
         {
@@ -40,8 +40,18 @@
         "symfony/ux-twig-component": "^2.0",
         "symplify/easy-coding-standard": "^13.0"
     },
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "extension.neon"
+            ]
+        }
+    },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
