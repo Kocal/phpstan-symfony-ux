@@ -10,11 +10,18 @@ To install the PHPStan rules for Symfony UX, you can use Composer:
 composer require --dev kocal/phpstan-symfony-ux
 ```
 
+If you have [phpstan/extension-installer](https://github.com/phpstan/extension-installer) installed (which is the case by default), the extension will be automatically registered and you're ready to go.
+
+If you don't use the extension installer, you'll need to manually add the extension to your `phpstan.neon` or `phpstan.dist.neon` configuration file:
+
+```yaml
+includes:
+    - vendor/kocal/phpstan-symfony-ux/extension.neon
+```
+
 ## Configuration
 
-After installing the package, you need to configure PHPStan to use the rules.
-
-Each rule can be enabled individually by adding it to your `phpstan.dist.neon` configuration file.
+Each rule can be enabled individually by adding it to your `phpstan.neon` or `phpstan.dist.neon` configuration file.
 
 ## LiveComponent Rules
 
