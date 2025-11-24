@@ -16,6 +16,82 @@ After installing the package, you need to configure PHPStan to use the rules.
 
 Each rule can be enabled individually by adding it to your `phpstan.dist.neon` configuration file.
 
+## LiveComponent Rules
+
+### LiveActionMethodsShouldBePublicRule
+
+Enforces that all methods annotated with `#[LiveAction]` in LiveComponents must be declared as public.
+LiveAction methods need to be publicly accessible to be invoked as component actions from the frontend.
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LiveActionMethodsShouldBePublicRule
+```
+
+```php
+// src/Twig/Components/TodoList.php
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
+
+#[AsLiveComponent]
+final class TodoList
+{
+    #[LiveAction]
+    private function addItem(): void
+    {
+    }
+}
+```
+
+```php
+// src/Twig/Components/TodoList.php
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
+
+#[AsLiveComponent]
+final class TodoList
+{
+    #[LiveAction]
+    protected function deleteItem(): void
+    {
+    }
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/TodoList.php
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
+
+#[AsLiveComponent]
+final class TodoList
+{
+    #[LiveAction]
+    public function addItem(): void
+    {
+    }
+
+    #[LiveAction]
+    public function deleteItem(): void
+    {
+    }
+}
+```
+
+:+1:
+
+<br>
+
 ## TwigComponent Rules
 
 > [!NOTE]
