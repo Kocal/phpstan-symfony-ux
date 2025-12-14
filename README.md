@@ -165,6 +165,136 @@ final class Notification
 
 <br>
 
+### LivePropHydrationMethodsRule
+
+Enforces that when a `#[LiveProp]` attribute specifies `hydrateWith` and `dehydrateWith` parameters:
+- Both parameters must be specified together
+- Both methods must exist in the component class and be declared as public
+- The types must be compatible throughout the hydration/dehydration cycle:
+  - The property must have a type declaration
+  - The hydrate method must return the same type as the property
+  - The dehydrate method must accept the same type as the property as its first parameter
+  - The dehydrate method's return type must match the hydrate method's parameter type
+
+This ensures data flows correctly between frontend and backend representations.
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LivePropHydrationMethodsRule
+```
+
+```php
+// src/Twig/Components/ProductList.php
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
+
+#[AsLiveComponent]
+final class ProductList
+{
+    // Error: Missing dehydrateWith parameter
+    #[LiveProp(hydrateWith: 'hydrateFilters')]
+    public array $filters;
+}
+```
+
+```php
+// src/Twig/Components/ProductList.php
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
+
+#[AsLiveComponent]
+final class ProductList
+{
+    #[LiveProp(hydrateWith: 'hydrateFilters', dehydrateWith: 'dehydrateFilters')]
+    public array $filters;
+
+    // Error: Methods are private/protected instead of public
+    private function hydrateFilters(array $data): array
+    {
+        return $data;
+    }
+
+    protected function dehydrateFilters(array $data): array
+    {
+        return $data;
+    }
+}
+```
+
+```php
+// src/Twig/Components/ShoppingCart.php
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
+
+class Product
+{
+    public function __construct(public string $name, public float $price) {}
+}
+
+#[AsLiveComponent]
+final class ShoppingCart
+{
+    #[LiveProp(hydrateWith: 'hydrateProduct', dehydrateWith: 'dehydrateProduct')]
+    public Product $product;
+
+    // Error: Return type doesn't match property type
+    public function hydrateProduct(array $data): array
+    {
+        return $data;
+    }
+
+    // Error: Parameter type doesn't match property type
+    public function dehydrateProduct(string $product): array
+    {
+        return [];
+    }
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/ShoppingCart.php
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
+
+class Product
+{
+    public function __construct(public string $name, public float $price) {}
+}
+
+#[AsLiveComponent]
+final class ShoppingCart
+{
+    #[LiveProp(hydrateWith: 'hydrateProduct', dehydrateWith: 'dehydrateProduct')]
+    public Product $product;
+
+    public function hydrateProduct(array $data): Product
+    {
+        return new Product($data['name'], $data['price']);
+    }
+
+    public function dehydrateProduct(Product $product): array
+    {
+        return ['name' => $product->name, 'price' => $product->price];
+    }
+}
+```
+
+:+1:
+
+<br>
+
 ## TwigComponent Rules
 
 > [!NOTE]
