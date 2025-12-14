@@ -10,6 +10,8 @@ parameters:
             paths:
                 - tests/**/Fixture/*
             identifiers:
+                - argument.type
                 - method.unused
                 - missingType.iterableValue
+                - missingType.property
                 - property.unused
