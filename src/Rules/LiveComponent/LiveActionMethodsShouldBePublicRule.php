@@ -25,14 +25,14 @@ final class LiveActionMethodsShouldBePublicRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        if (! AttributeFinder::findAnyAttribute($node, [AsLiveComponent::class])) {
+        if (! AttributeFinder::findAttribute($node, AsLiveComponent::class)) {
             return [];
         }
 
         $errors = [];
 
         foreach ($node->getMethods() as $method) {
-            if (! AttributeFinder::findAnyAttribute($method, [LiveAction::class])) {
+            if (! AttributeFinder::findAttribute($method, LiveAction::class)) {
                 continue;
             }
 

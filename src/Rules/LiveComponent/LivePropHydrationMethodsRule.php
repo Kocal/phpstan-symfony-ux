@@ -140,8 +140,8 @@ final class LivePropHydrationMethodsRule implements Rule
             $dehydrateMethodRefl = $reflClass->getMethod($dehydrateWith, $scope);
 
             // Get AST nodes for line numbers
-            $hydrateMethodNode = $this->findMethod($node, $hydrateWith);
-            $dehydrateMethodNode = $this->findMethod($node, $dehydrateWith);
+            $hydrateMethodNode = $node->getMethod($hydrateWith);
+            $dehydrateMethodNode = $node->getMethod($dehydrateWith);
 
             // Check that methods are public
             if (! $hydrateMethodRefl->isPublic()) {
@@ -293,20 +293,6 @@ final class LivePropHydrationMethodsRule implements Rule
                 if ($arg->value instanceof Node\Scalar\String_) {
                     return $arg->value->value;
                 }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Finds a method AST node by name in the given class (used for line numbers).
-     */
-    private function findMethod(Class_ $classNode, string $methodName): ?Node\Stmt\ClassMethod
-    {
-        foreach ($classNode->getMethods() as $method) {
-            if ($method->name->toString() === $methodName) {
-                return $method;
             }
         }
 
