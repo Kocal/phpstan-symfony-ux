@@ -25,14 +25,14 @@ final class LiveListenerMethodsShouldBePublicRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        if (! AttributeFinder::findAnyAttribute($node, [AsLiveComponent::class])) {
+        if (! AttributeFinder::findAttribute($node, AsLiveComponent::class)) {
             return [];
         }
 
         $errors = [];
 
         foreach ($node->getMethods() as $method) {
-            if (! AttributeFinder::findAnyAttribute($method, [LiveListener::class])) {
+            if (! AttributeFinder::findAttribute($method, LiveListener::class)) {
                 continue;
             }
 

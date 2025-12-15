@@ -295,6 +295,97 @@ final class ShoppingCart
 
 <br>
 
+### LivePropModifierMethodRule
+
+Enforces that when a `#[LiveProp]` attribute specifies a `modifier` parameter:
+- The method must exist in the component class and be declared as public
+- The method must have 1 or 2 parameters:
+  - First parameter: must be of type `LiveProp`
+  - Second parameter (optional): must be of type `string`
+- The method must return a `LiveProp` instance
+
+This ensures that property modifiers are correctly implemented and can safely transform LiveProp configurations at runtime.
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LivePropModifierMethodRule
+```
+
+```php
+// src/Twig/Components/SearchComponent.php
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
+
+#[AsLiveComponent]
+final class SearchComponent
+{
+    #[LiveProp(modifier: 'modifyQueryProp')]
+    public string $query;
+
+    // Error: Method is not public
+    private function modifyQueryProp(LiveProp $liveProp): LiveProp
+    {
+        return $liveProp;
+    }
+
+    // Error: Wrong return type
+    public function modifyOtherProp(LiveProp $liveProp): string
+    {
+        return 'test';
+    }
+
+    // Error: Wrong first parameter type
+    public function modifyAnotherProp(string $value): LiveProp
+    {
+        return new LiveProp();
+    }
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/SearchComponent.php
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
+use Symfony\UX\LiveComponent\Mapping\UrlMapping;
+
+#[AsLiveComponent]
+final class SearchComponent
+{
+    #[LiveProp(modifier: 'modifyQueryProp')]
+    public string $query;
+
+    #[LiveProp]
+    public ?string $alias = null;
+
+    // Valid: with two parameters
+    public function modifyQueryProp(LiveProp $liveProp, string $name): LiveProp
+    {
+        if ($this->alias) {
+            $liveProp = $liveProp->withUrl(new UrlMapping(as: $this->alias));
+        }
+        return $liveProp;
+    }
+
+    // Valid: with one parameter
+    public function modifyOtherProp(LiveProp $liveProp): LiveProp
+    {
+        return $liveProp->writable();
+    }
+}
+```
+
+:+1:
+
+<br>
+
 ## TwigComponent Rules
 
 > [!NOTE]
