@@ -46,8 +46,8 @@ final class MethodsShouldBePublicOrPrivateRule implements Rule
         }
 
         $errors = [];
-        $classReflection = $this->reflectionProvider->getClass($className);
-        $abstractTraitMethods = $this->getAbstractTraitMethods($classReflection);
+        $reflClass = $this->reflectionProvider->getClass($className);
+        $abstractTraitMethods = $this->getAbstractTraitMethods($reflClass);
 
         foreach ($node->getMethods() as $method) {
             if (! $method->isProtected()) {
@@ -62,7 +62,7 @@ final class MethodsShouldBePublicOrPrivateRule implements Rule
             }
 
             $errors[] = RuleErrorBuilder::message(
-                sprintf('Method "%s()" in a Twig component should not be protected.', $methodName)
+                sprintf('Method "%s()" in a Twig component must not be protected.', $methodName)
             )
                 ->identifier('symfonyUX.twigComponent.methodsShouldBePublicOrPrivate')
                 ->line($method->getLine())
@@ -77,7 +77,7 @@ final class MethodsShouldBePublicOrPrivateRule implements Rule
         }
 
         $reportedTraitMethods = [];
-        foreach ($classReflection->getTraits() as $traitReflection) {
+        foreach ($reflClass->getTraits() as $traitReflection) {
             // Use native reflection to get trait methods
             foreach ($traitReflection->getNativeReflection()->getMethods() as $traitMethod) {
                 if (! $traitMethod->isProtected()) {
@@ -111,7 +111,7 @@ final class MethodsShouldBePublicOrPrivateRule implements Rule
                 }
 
                 $errors[] = RuleErrorBuilder::message(
-                    sprintf('Method "%s()" in a Twig component should not be protected.', $methodName)
+                    sprintf('Method "%s()" in a Twig component must not be protected.', $methodName)
                 )
                     ->identifier('symfonyUX.twigComponent.methodsShouldBePublicOrPrivate')
                     ->line($lineNumber)
@@ -128,11 +128,11 @@ final class MethodsShouldBePublicOrPrivateRule implements Rule
      *
      * @return array<string, true>
      */
-    private function getAbstractTraitMethods(ClassReflection $classReflection): array
+    private function getAbstractTraitMethods(ClassReflection $reflClass): array
     {
         $abstractTraitMethods = [];
 
-        foreach ($classReflection->getTraits() as $traitReflection) {
+        foreach ($reflClass->getTraits() as $traitReflection) {
             foreach ($traitReflection->getNativeReflection()->getMethods() as $method) {
                 if ($method->isAbstract()) {
                     $abstractTraitMethods[$method->getName()] = true;

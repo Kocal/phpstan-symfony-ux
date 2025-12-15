@@ -50,6 +50,9 @@ final class ExposePublicPropsShouldBeFalseRule implements Rule
         return [];
     }
 
+    /**
+     * Extract the exposePublicProps value from the component attribute.
+     */
     private function getExposePublicPropsValue(Node\Attribute $attribute): ?bool
     {
         foreach ($attribute->args as $arg) {

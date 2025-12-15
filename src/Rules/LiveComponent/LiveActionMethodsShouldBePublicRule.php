@@ -40,7 +40,7 @@ final class LiveActionMethodsShouldBePublicRule implements Rule
                 $methodName = $method->name->toString();
 
                 $errors[] = RuleErrorBuilder::message(
-                    sprintf('LiveAction method "%s()" should be public.', $methodName)
+                    sprintf('LiveAction method "%s()" must be public.', $methodName)
                 )
                     ->identifier('symfonyUX.liveComponent.liveActionMethodsShouldBePublic')
                     ->line($method->getLine())

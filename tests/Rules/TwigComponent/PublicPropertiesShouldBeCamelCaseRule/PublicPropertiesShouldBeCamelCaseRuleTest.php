@@ -19,12 +19,12 @@ final class PublicPropertiesShouldBeCamelCaseRuleTest extends RuleTestCase
             [__DIR__ . '/Fixture/ComponentWithSnakeCaseProperty.php'],
             [
                 [
-                    'Public property "user_name" in a Twig component should be in camelCase.',
+                    'Public property "user_name" in a Twig component must be in camelCase.',
                     12,
                     'Consider renaming "user_name" to "userName".',
                 ],
                 [
-                    'Public property "is_active" in a Twig component should be in camelCase.',
+                    'Public property "is_active" in a Twig component must be in camelCase.',
                     14,
                     'Consider renaming "is_active" to "isActive".',
                 ],
@@ -35,7 +35,7 @@ final class PublicPropertiesShouldBeCamelCaseRuleTest extends RuleTestCase
             [__DIR__ . '/Fixture/ComponentWithPascalCaseProperty.php'],
             [
                 [
-                    'Public property "UserName" in a Twig component should be in camelCase.',
+                    'Public property "UserName" in a Twig component must be in camelCase.',
                     12,
                     'Consider renaming "UserName" to "userName".',
                 ],
@@ -46,12 +46,12 @@ final class PublicPropertiesShouldBeCamelCaseRuleTest extends RuleTestCase
             [__DIR__ . '/Fixture/LiveComponentWithSnakeCaseProperty.php'],
             [
                 [
-                    'Public property "user_name" in a Twig component should be in camelCase.',
+                    'Public property "user_name" in a Twig component must be in camelCase.',
                     12,
                     'Consider renaming "user_name" to "userName".',
                 ],
                 [
-                    'Public property "is_active" in a Twig component should be in camelCase.',
+                    'Public property "is_active" in a Twig component must be in camelCase.',
                     14,
                     'Consider renaming "is_active" to "isActive".',
                 ],

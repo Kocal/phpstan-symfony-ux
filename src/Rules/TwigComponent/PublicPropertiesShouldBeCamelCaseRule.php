@@ -41,7 +41,7 @@ final class PublicPropertiesShouldBeCamelCaseRule implements Rule
 
                 if (! $this->isCamelCase($propertyName)) {
                     $errors[] = RuleErrorBuilder::message(
-                        sprintf('Public property "%s" in a Twig component should be in camelCase.', $propertyName)
+                        sprintf('Public property "%s" in a Twig component must be in camelCase.', $propertyName)
                     )
                         ->identifier('symfonyUX.twigComponent.publicPropertiesShouldBeCamelCase')
                         ->line($property->getLine())
@@ -54,12 +54,18 @@ final class PublicPropertiesShouldBeCamelCaseRule implements Rule
         return $errors;
     }
 
+    /**
+     * Check if a property name is in camelCase format.
+     */
     private function isCamelCase(string $name): bool
     {
         // Property should start with a lowercase letter and contain no underscores
         return preg_match('/^[a-z][a-zA-Z0-9]*$/', $name) === 1;
     }
 
+    /**
+     * Convert a string to camelCase format.
+     */
     private function toCamelCase(string $name): string
     {
         // Convert snake_case or PascalCase to camelCase

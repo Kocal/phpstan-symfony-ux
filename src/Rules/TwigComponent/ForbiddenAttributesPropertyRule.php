@@ -68,6 +68,8 @@ final class ForbiddenAttributesPropertyRule implements Rule
     }
 
     /**
+     * Extract the attributes variable name from the component attribute.
+     *
      * @return array{name: string, custom: bool}|null
      */
     private function getAttributesVarName(Node\Attribute $attribute): ?array

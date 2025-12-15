@@ -19,7 +19,7 @@ final class MethodsShouldBePublicOrPrivateRuleTest extends RuleTestCase
             [__DIR__ . '/Fixture/ComponentWithProtectedMethod.php'],
             [
                 [
-                    'Method "protectedMethod()" in a Twig component should not be protected.',
+                    'Method "protectedMethod()" in a Twig component must not be protected.',
                     14,
                     'Twig component methods should be either public or private, not protected.',
                 ],
@@ -30,7 +30,7 @@ final class MethodsShouldBePublicOrPrivateRuleTest extends RuleTestCase
             [__DIR__ . '/Fixture/LiveComponentWithProtectedMethod.php'],
             [
                 [
-                    'Method "protectedMethod()" in a Twig component should not be protected.',
+                    'Method "protectedMethod()" in a Twig component must not be protected.',
                     14,
                     'Twig component methods should be either public or private, not protected.',
                 ],
@@ -42,7 +42,7 @@ final class MethodsShouldBePublicOrPrivateRuleTest extends RuleTestCase
             [__DIR__ . '/Fixture/ComponentWithProtectedConcreteMethodFromTrait.php'],
             [
                 [
-                    'Method "protectedConcreteTraitMethod()" in a Twig component should not be protected.',
+                    'Method "protectedConcreteTraitMethod()" in a Twig component must not be protected.',
                     12,
                     'Twig component methods should be either public or private, not protected.',
                 ],
@@ -53,7 +53,7 @@ final class MethodsShouldBePublicOrPrivateRuleTest extends RuleTestCase
             [__DIR__ . '/Fixture/LiveComponentWithProtectedConcreteMethodFromTrait.php'],
             [
                 [
-                    'Method "protectedConcreteTraitMethod()" in a Twig component should not be protected.',
+                    'Method "protectedConcreteTraitMethod()" in a Twig component must not be protected.',
                     12,
                     'Twig component methods should be either public or private, not protected.',
                 ],
@@ -65,7 +65,7 @@ final class MethodsShouldBePublicOrPrivateRuleTest extends RuleTestCase
             [__DIR__ . '/Fixture/ComponentWithDuplicateTraitMethods.php'],
             [
                 [
-                    'Method "duplicateConcreteMethod()" in a Twig component should not be protected.',
+                    'Method "duplicateConcreteMethod()" in a Twig component must not be protected.',
                     12,
                     'Twig component methods should be either public or private, not protected.',
                 ],
