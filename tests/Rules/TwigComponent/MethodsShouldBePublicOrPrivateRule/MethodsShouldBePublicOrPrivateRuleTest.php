@@ -36,6 +36,41 @@ final class MethodsShouldBePublicOrPrivateRuleTest extends RuleTestCase
                 ],
             ]
         );
+
+        // Protected concrete (non-abstract) methods from traits should trigger an error
+        $this->analyse(
+            [__DIR__ . '/Fixture/ComponentWithProtectedConcreteMethodFromTrait.php'],
+            [
+                [
+                    'Method "protectedConcreteTraitMethod()" in a Twig component should not be protected.',
+                    12,
+                    'Twig component methods should be either public or private, not protected.',
+                ],
+            ]
+        );
+
+        $this->analyse(
+            [__DIR__ . '/Fixture/LiveComponentWithProtectedConcreteMethodFromTrait.php'],
+            [
+                [
+                    'Method "protectedConcreteTraitMethod()" in a Twig component should not be protected.',
+                    12,
+                    'Twig component methods should be either public or private, not protected.',
+                ],
+            ]
+        );
+
+        // When two traits define the same method, should report only one error
+        $this->analyse(
+            [__DIR__ . '/Fixture/ComponentWithDuplicateTraitMethods.php'],
+            [
+                [
+                    'Method "duplicateConcreteMethod()" in a Twig component should not be protected.',
+                    12,
+                    'Twig component methods should be either public or private, not protected.',
+                ],
+            ]
+        );
     }
 
     public function testNoViolations(): void
@@ -52,6 +87,17 @@ final class MethodsShouldBePublicOrPrivateRuleTest extends RuleTestCase
 
         $this->analyse(
             [__DIR__ . '/Fixture/LiveComponentWithPublicAndPrivateMethods.php'],
+            []
+        );
+
+        // Protected methods implementing abstract trait methods should not trigger an error
+        $this->analyse(
+            [__DIR__ . '/Fixture/ComponentWithProtectedMethodFromTrait.php'],
+            []
+        );
+
+        $this->analyse(
+            [__DIR__ . '/Fixture/LiveComponentWithProtectedMethodFromTrait.php'],
             []
         );
     }

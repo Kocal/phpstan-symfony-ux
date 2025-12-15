@@ -662,6 +662,8 @@ final class Alert
 Enforces that all methods in Twig Components are either public or private, but not protected.
 Since Twig Components must be final classes and inheritance is forbidden (see `ForbiddenInheritanceRule`), protected methods serve no purpose and should be avoided.
 
+**Exception:** Protected methods are allowed when they implement abstract methods defined in traits (e.g., `instantiateForm()` from `ComponentWithFormTrait`).
+
 ```yaml
 rules:
     - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\MethodsShouldBePublicOrPrivateRule
@@ -708,6 +710,33 @@ final class Alert
     private function helperMethod(): void
     {
         // ...
+    }
+}
+```
+
+:+1:
+
+<br>
+
+```php
+// src/Twig/Components/PostForm.php
+namespace App\Twig\Components;
+
+use Symfony\Component\Form\FormInterface;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\ComponentWithFormTrait;
+use Symfony\UX\LiveComponent\DefaultActionTrait;
+
+#[AsLiveComponent]
+final class PostForm
+{
+    use DefaultActionTrait;
+    use ComponentWithFormTrait;
+
+    // Implementing abstract method from ComponentWithFormTrait is allowed
+    protected function instantiateForm(): FormInterface
+    {
+        return $this->createForm(PostType::class);
     }
 }
 ```
