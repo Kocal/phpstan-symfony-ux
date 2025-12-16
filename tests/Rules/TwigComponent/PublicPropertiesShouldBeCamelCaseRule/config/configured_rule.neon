@@ -1,5 +1,0 @@
-includes:
-    - ../../../../test-extension.neon
-
-rules:
-    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\PublicPropertiesShouldBeCamelCaseRule
