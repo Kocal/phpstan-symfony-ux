@@ -19,12 +19,12 @@ final class LiveListenerMethodsShouldBePublicRuleTest extends RuleTestCase
             [__DIR__ . '/Fixture/PrivateLiveListener.php'],
             [
                 [
-                    'LiveListener method "onAnotherEvent()" should be public.',
+                    'LiveListener method "onAnotherEvent()" must be public.',
                     13,
                     'Change the method visibility to public.',
                 ],
                 [
-                    'LiveListener method "onSomeEvent()" should be public.',
+                    'LiveListener method "onSomeEvent()" must be public.',
                     18,
                     'Change the method visibility to public.',
                 ],

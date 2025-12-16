@@ -38,7 +38,7 @@ final class LiveListenerMethodsShouldBePublicRule implements Rule
 
             if (! $method->isPublic()) {
                 $errors[] = RuleErrorBuilder::message(sprintf(
-                    'LiveListener method "%s()" should be public.',
+                    'LiveListener method "%s()" must be public.',
                     $method->name->toString()
                 ))
                     ->identifier('symfonyUX.liveComponent.liveListenerMethodShouldBePublic')

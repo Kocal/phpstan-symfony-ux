@@ -19,7 +19,7 @@ final class ClassNameShouldNotEndWithComponentRuleTest extends RuleTestCase
             [__DIR__ . '/Fixture/AlertComponent.php'],
             [
                 [
-                    'Twig component class "AlertComponent" should not end with "Component".',
+                    'Twig component class "AlertComponent" must not end with "Component".',
                     10,
                     'Remove the "Component" suffix from the class name.',
                 ],
@@ -30,7 +30,7 @@ final class ClassNameShouldNotEndWithComponentRuleTest extends RuleTestCase
             [__DIR__ . '/Fixture/CounterComponent.php'],
             [
                 [
-                    'Twig component class "CounterComponent" should not end with "Component".',
+                    'Twig component class "CounterComponent" must not end with "Component".',
                     10,
                     'Remove the "Component" suffix from the class name.',
                 ],

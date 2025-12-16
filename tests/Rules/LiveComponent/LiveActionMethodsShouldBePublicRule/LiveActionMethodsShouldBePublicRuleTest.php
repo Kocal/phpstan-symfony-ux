@@ -19,7 +19,7 @@ final class LiveActionMethodsShouldBePublicRuleTest extends RuleTestCase
             [__DIR__ . '/Fixture/LiveComponentWithPrivateLiveAction.php'],
             [
                 [
-                    'LiveAction method "save()" should be public.',
+                    'LiveAction method "save()" must be public.',
                     15,
                     'Methods annotated with #[LiveAction] must be public to be accessible as component actions.',
                 ],
@@ -30,7 +30,7 @@ final class LiveActionMethodsShouldBePublicRuleTest extends RuleTestCase
             [__DIR__ . '/Fixture/LiveComponentWithProtectedLiveAction.php'],
             [
                 [
-                    'LiveAction method "delete()" should be public.',
+                    'LiveAction method "delete()" must be public.',
                     15,
                     'Methods annotated with #[LiveAction] must be public to be accessible as component actions.',
                 ],

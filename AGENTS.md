@@ -210,11 +210,55 @@ This command will:
 ### Other available commands
 Check the `composer.json` file to see all available commands.
 
+## Code Style Conventions
+
+### Variable Naming
+
+- **Reflection variables**: Use `$reflClass` for `ClassReflection` objects (not `$classReflection`)
+- **Method reflection**: Use `$reflMethod` for method reflections
+- **Property reflection**: Use descriptive names like `$propertyRefl`
+- **Attribute nodes**: Use `$attribute` for single attributes, `$livePropAttribute` for specific ones
+- **Other nodes**: Use descriptive names like `$method`, `$property`, `$node`
+
+### PHPDoc Comments
+
+- **Public methods**: Always include `@implements Rule<Class_>` or similar on rule classes
+- **Private methods**: Always add a brief description comment explaining the method's purpose
+- **Return types**: Document complex return types with `@return` (e.g., `@return array{name: string, custom: bool}|null`)
+- **Parameters**: Document array parameters with `@param string[]` or similar when applicable
+
+### Error Messages
+
+- **Modal verbs**: Use "must" for requirements (e.g., "Method must be public"), not "should"
+- **Consistency**: Be consistent with message structure across similar rules
+- **Tips**: Always provide actionable tips with `->tip()` to guide users toward solutions
+- **Formatting**: Use double quotes for strings in sprintf, backticks in markdown for code
+
+### Code Structure
+
+- **Early returns**: Check for attribute presence first, return empty array if not found
+- **Null checks**: Check for null/undefined values before proceeding
+- **Error collection**: Use `$errors = []` array and collect all errors before returning
+- **Method order**:
+  1. `getNodeType()`
+  2. `processNode()`
+  3. Private helper methods (alphabetically sorted if multiple)
+
+### Validation Order in `processNode()`
+
+1. Check if node has required attribute (return `[]` if not)
+2. Check if `namespacedName` exists (when needed)
+3. Initialize error array: `$errors = []`
+4. Get reflection class if needed: `$reflClass = $this->reflectionProvider->getClass(...)`
+5. Iterate over relevant elements (methods, properties, etc.)
+6. Perform validations and collect errors
+7. Return `$errors`
+
 ## Best Practices
 
 1. **Naming**: Rules should have a descriptive name and end with `Rule`
-2. **Identifiers**: Use the format `symfonyUX.twigComponent.descriptiveName` for error identifiers
-3. **Clear messages**: Error messages should be explicit and include a `tip()` with a suggestion
+2. **Identifiers**: Use the format `symfonyUX.twigComponent.descriptiveName` or `symfonyUX.liveComponent.descriptiveName` for error identifiers
+3. **Clear messages**: Error messages must be explicit and include a `tip()` with a suggestion
 4. **Complete tests**: Always test valid cases, invalid cases, and non-components
 5. **Documentation**: Document each rule in the README with concrete examples
 6. **Validation**: Always run `symfony composer qa-fix` before committing

@@ -37,7 +37,7 @@ final class ClassNameShouldNotEndWithComponentRule implements Rule
         $classNameString = $className->toString();
         if (str_ends_with($classNameString, 'Component')) {
             return [
-                RuleErrorBuilder::message(sprintf('Twig component class "%s" should not end with "Component".', $classNameString))
+                RuleErrorBuilder::message(sprintf('Twig component class "%s" must not end with "Component".', $classNameString))
                     ->identifier('symfonyUX.twigComponent.classNameShouldNotEndWithComponent')
                     ->line($className->getLine())
                     ->tip('Remove the "Component" suffix from the class name.')
