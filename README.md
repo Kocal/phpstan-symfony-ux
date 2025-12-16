@@ -29,15 +29,17 @@ Each rule can be enabled individually by adding it to your `phpstan.neon` or `ph
 
 ## LiveComponent Rules
 
-### LiveActionMethodsShouldBePublicRule
+### LiveActionMethodsVisibilityRule
 
 Enforces that all methods annotated with `#[LiveAction]` in LiveComponents must be declared as public.
 LiveAction methods need to be publicly accessible to be invoked as component actions from the frontend.
 
 ```yaml
 rules:
-    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LiveActionMethodsShouldBePublicRule
+    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LiveActionMethodsVisibilityRule
 ```
+
+> **Note:** The rule `LiveActionMethodsShouldBePublicRule` is deprecated and will be removed in version 2.0. Use `LiveActionMethodsVisibilityRule` instead.
 
 ```php
 // src/Twig/Components/TodoList.php
@@ -103,15 +105,17 @@ final class TodoList
 
 <br>
 
-### LiveListenerMethodsShouldBePublicRule
+### LiveListenerMethodsVisibilityRule
 
 Enforces that all methods annotated with `#[LiveListener]` in LiveComponents must be declared as public.
 LiveListener methods need to be publicly accessible to be invoked when listening to events from the frontend.
 
 ```yaml
 rules:
-    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LiveListenerMethodsShouldBePublicRule
+    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LiveListenerMethodsVisibilityRule
 ```
+
+> **Note:** The rule `LiveListenerMethodsShouldBePublicRule` is deprecated and will be removed in version 2.0. Use `LiveListenerMethodsVisibilityRule` instead.
 
 ```php
 // src/Twig/Components/Notification.php
@@ -448,14 +452,16 @@ final class Alert
 
 <br>
 
-### ClassNameShouldNotEndWithComponentRule
+### ClassNameMustNotEndWithComponentRule
 
 Forbid Twig Component class names from ending with "Component" suffix, as it creates redundancy since the class is already identified as a component through the `#[AsTwigComponent]` attribute.
 
 ```yaml
 rules:
-    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ClassNameShouldNotEndWithComponentRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ClassNameMustNotEndWithComponentRule
 ```
+
+> **Note:** The rule `ClassNameShouldNotEndWithComponentRule` is deprecated and will be removed in version 2.0. Use `ClassNameMustNotEndWithComponentRule` instead.
 
 ```php
 // src/Twig/Components/AlertComponent.php
@@ -489,15 +495,17 @@ final class Alert
 
 <br>
 
-### ExposePublicPropsShouldBeFalseRule
+### ExposePublicPropsMustBeFalseRule
 
 Enforces that the `#[AsTwigComponent]` attribute has its `exposePublicProps` parameter explicitly set to `false`.
 This prevents public properties from being automatically exposed to templates, promoting explicit control over what data is accessible in your Twig components.
 
 ```yaml
 rules:
-    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ExposePublicPropsShouldBeFalseRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ExposePublicPropsMustBeFalseRule
 ```
+
+> **Note:** The rule `ExposePublicPropsShouldBeFalseRule` is deprecated and will be removed in version 2.0. Use `ExposePublicPropsMustBeFalseRule` instead.
 
 ```php
 // src/Twig/Components/Alert.php
@@ -657,7 +665,7 @@ final class Alert
 
 <br>
 
-### MethodsShouldBePublicOrPrivateRule
+### MethodsVisibilityRule
 
 Enforces that all methods in Twig Components are either public or private, but not protected.
 Since Twig Components must be final classes and inheritance is forbidden (see `ForbiddenInheritanceRule`), protected methods serve no purpose and should be avoided.
@@ -666,8 +674,10 @@ Since Twig Components must be final classes and inheritance is forbidden (see `F
 
 ```yaml
 rules:
-    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\MethodsShouldBePublicOrPrivateRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\MethodsVisibilityRule
 ```
+
+> **Note:** The rule `MethodsShouldBePublicOrPrivateRule` is deprecated and will be removed in version 2.0. Use `MethodsVisibilityRule` instead.
 
 ```php
 // src/Twig/Components/Alert.php
@@ -924,15 +934,17 @@ final class Alert
 
 <br>
 
-### PublicPropertiesShouldBeCamelCaseRule
+### PublicPropertiesMustBeCamelCaseRule
 
 Enforces that all public properties in Twig Components follow camelCase naming convention.
 This ensures consistency and better integration with Twig templates where properties are passed and accessed using camelCase.
 
 ```yaml
 rules:
-    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\PublicPropertiesShouldBeCamelCaseRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\PublicPropertiesMustBeCamelCaseRule
 ```
+
+> **Note:** The rule `PublicPropertiesShouldBeCamelCaseRule` is deprecated and will be removed in version 2.0. Use `PublicPropertiesMustBeCamelCaseRule` instead.
 
 ```php
 // src/Twig/Components/Alert.php
