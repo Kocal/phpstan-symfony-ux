@@ -1,8 +1,8 @@
 # PHPStan for Symfony UX
 
 ![Packagist License](https://img.shields.io/packagist/l/kocal/phpstan-symfony-ux)
-![Packagist Version](https://img.shields.io/packagist/v/kocal/phpstan-symfony-ux)
-
+[![Packagist Version](https://img.shields.io/packagist/v/kocal/phpstan-symfony-ux)](https://packagist.org/packages/kocal/phpstan-symfony-ux)
+[![CI](https://github.com/Kocal/phpstan-symfony-ux/actions/workflows/ci.yaml/badge.svg)](https://github.com/Kocal/phpstan-symfony-ux/actions/workflows/ci.yaml)
 
 A set of PHPStan rules to improve static analysis for [Symfony UX](https://github.com/symfony/ux) applications.
 

@@ -1,32 +1,63 @@
-# AI Agent Instructions - PHPStan Symfony UX Project
+# AI Agent Instructions - PHPStan Symfony UX
+
+Reference guide for AI agents working on this PHPStan rules project for Symfony UX.
 
 ## Project Overview
 
-This project contains custom PHPStan rules to improve static analysis of Symfony UX applications, particularly for Twig components and Live components.
+This project provides custom PHPStan rules to improve static analysis of Symfony UX applications, specifically for:
 
-> [!NOTE]
-> All TwigComponent rules also apply to LiveComponents (classes annotated with `#[AsLiveComponent]`), since LiveComponents are enhanced TwigComponents.
+- **TwigComponent**: Twig components (classes annotated with `#[AsTwigComponent]`)
+- **LiveComponent**: Live components (classes annotated with `#[AsLiveComponent]`)
+
+> [!IMPORTANT]
+> TwigComponent rules also apply to LiveComponents since a LiveComponent is an extension of a TwigComponent. Use `AttributeFinder::findAnyAttribute()` to target both attributes.
 
 ## Project Structure
 
-- `src/Rules/<UX Package>/` : Contains PHPStan rules for a given UX package (e.g.: `src/Rules/TwigComponent/`)
-- `src/NodeAnalyzer/` : Contains reusable analyzers (e.g., `AttributeFinder`)
-- `tests/Rules/<UX Package>/` : Contains tests for each rule for a given UX package (e.g.: `tests/Rules/TwigComponent/`)
-- `README.md` : Documentation of available rules
+```
+src/
+├── NodeAnalyzer/
+│   └── AttributeFinder.php          # Utility to find PHP attributes
+└── Rules/
+    ├── TwigComponent/                # Rules for TwigComponent (also apply to LiveComponents)
+    │   ├── ClassMustBeFinalRule.php
+    │   ├── ForbiddenAttributesPropertyRule.php
+    │   └── ...
+    └── LiveComponent/                # LiveComponent-specific rules
+        ├── LivePropHydrationMethodsRule.php
+        └── ...
 
-## How to Create a New PHPStan Rule
+tests/
+└── Rules/
+    ├── TwigComponent/
+    │   └── ClassMustBeFinalRule/
+    │       ├── ClassMustBeFinalRuleTest.php
+    │       ├── config/
+    │       │   └── configured_rule.neon
+    │       └── Fixture/
+    │           ├── InvalidNonFinalTwigComponent.php
+    │           ├── ValidTwigComponent.php
+    │           └── NotAComponent.php
+    └── LiveComponent/
+        └── ...
+```
 
-The code examples below are mainly written for TwigComponent, but it must be adapted:
-- the rules are organized by UX Packages
-- some code or files are maybe not necessary for other UX Packages
+## Available Commands
 
-### 1. Create the rule class in `src/Rules/<UX Package>/`
+| Command | Description |
+|---------|-------------|
+| `symfony composer qa-fix` | Runs cs-fix + phpstan + tests (run before each commit) |
+| `symfony composer phpstan` | PHPStan analysis of the project |
+| `symfony composer test` | Runs PHPUnit tests |
+| `symfony composer cs` | Checks code style |
+| `symfony composer cs-fix` | Automatically fixes code style |
 
-Each rule must:
-- Implement PHPStan's `Rule` interface
-- Return an array of errors via `RuleErrorBuilder`
+## Creating a New Rule
 
-Typical structure:
+### Step 1: Create the Rule Class
+
+Location: `src/Rules/<Package>/<RuleName>Rule.php`
+
 ```php
 <?php
 
@@ -46,7 +77,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 /**
  * @implements Rule<Class_>
  */
-final class MyRuleRule implements Rule
+final class ExampleRule implements Rule
 {
     public function getNodeType(): string
     {
@@ -55,18 +86,18 @@ final class MyRuleRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
+        // 1. Check for attribute presence (early return)
         if (! AttributeFinder::findAnyAttribute($node, [AsTwigComponent::class, AsLiveComponent::class])) {
             return [];
         }
 
-        // Validation logic here
-
-        if ($errorCondition) {
+        // 2. Validation logic
+        if ($violationDetected) {
             return [
-                RuleErrorBuilder::message('Clear and descriptive error message.')
-                    ->identifier('symfonyUX.twigComponent.uniqueIdentifier')
+                RuleErrorBuilder::message('Clear description of the problem.')
+                    ->identifier('symfonyUX.twigComponent.exampleRule')
                     ->line($node->getLine())
-                    ->tip('Suggestion to fix the issue.')
+                    ->tip('Suggestion to fix the problem.')
                     ->build(),
             ];
         }
@@ -76,46 +107,60 @@ final class MyRuleRule implements Rule
 }
 ```
 
-### 2. Create tests in `tests/Rules/<UX Package>/`
+### Step 2: Create Tests
 
 Required structure:
 ```
-tests/Rules/TwigComponent/MyRuleRule/
-├── MyRuleRuleTest.php
-├── Fixture/
-│   ├── InvalidCase.php (case that should fail)
-│   ├── ValidCase.php (case that should pass)
-│   └── NotAComponent.php (class without AsTwigComponent attribute)
-└── config/
-    └── configured_rule.neon
+tests/Rules/TwigComponent/ExampleRule/
+├── ExampleRuleTest.php
+├── config/
+│   └── configured_rule.neon
+└── Fixture/
+    ├── InvalidTwigComponent.php
+    ├── InvalidLiveComponent.php
+    ├── ValidTwigComponent.php
+    ├── ValidLiveComponent.php
+    └── NotAComponent.php
 ```
 
-#### Main test file (`MyRuleRuleTest.php`):
+#### Test File (`ExampleRuleTest.php`)
+
 ```php
 <?php
 
 declare(strict_types=1);
 
-namespace Kocal\PHPStanSymfonyUX\Tests\Rules\TwigComponent\MyRuleRule;
+namespace Kocal\PHPStanSymfonyUX\Tests\Rules\TwigComponent\ExampleRule;
 
-use Kocal\PHPStanSymfonyUX\Rules\TwigComponent\MyRuleRule;
+use Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ExampleRule;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 
 /**
- * @extends RuleTestCase<MyRuleRule>
+ * @extends RuleTestCase<ExampleRule>
  */
-final class MyRuleRuleTest extends RuleTestCase
+final class ExampleRuleTest extends RuleTestCase
 {
     public function testViolations(): void
     {
         $this->analyse(
-            [__DIR__ . '/Fixture/InvalidCase.php'],
+            [__DIR__ . '/Fixture/InvalidTwigComponent.php'],
             [
                 [
                     'Expected error message.',
                     10, // Line number
-                    'Expected suggestion.',
+                    'Expected tip.',
+                ],
+            ]
+        );
+
+        $this->analyse(
+            [__DIR__ . '/Fixture/InvalidLiveComponent.php'],
+            [
+                [
+                    'Expected error message.',
+                    10,
+                    'Expected tip.',
                 ],
             ]
         );
@@ -123,15 +168,9 @@ final class MyRuleRuleTest extends RuleTestCase
 
     public function testNoViolations(): void
     {
-        $this->analyse(
-            [__DIR__ . '/Fixture/NotAComponent.php'],
-            []
-        );
-
-        $this->analyse(
-            [__DIR__ . '/Fixture/ValidCase.php'],
-            []
-        );
+        $this->analyse([__DIR__ . '/Fixture/NotAComponent.php'], []);
+        $this->analyse([__DIR__ . '/Fixture/ValidTwigComponent.php'], []);
+        $this->analyse([__DIR__ . '/Fixture/ValidLiveComponent.php'], []);
     }
 
     public static function getAdditionalConfigFiles(): array
@@ -141,39 +180,103 @@ final class MyRuleRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return self::getContainer()->getByType(MyRuleRule::class);
+        return self::getContainer()->getByType(ExampleRule::class);
     }
 }
 ```
 
-#### Configuration (`config/configured_rule.neon`):
+#### Configuration (`config/configured_rule.neon`)
+
 ```yaml
+includes:
+    - ../../../../test-extension.neon
+
 rules:
-    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\MyRuleRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ExampleRule
 ```
 
-#### Fixtures:
-- **InvalidCase.php**: Example that violates the rule (both for TwigComponent and LiveComponent)
-- **ValidCase.php**: Example that complies with the rule (both for TwigComponent and LiveComponent)
-- **NotAComponent.php**: Class without `#[AsTwigComponent]` or `#[AsLiveComponent]` (should not trigger an error)
+#### Fixtures
 
-### 3. Document the rule in `README.md`
+Fixtures must cover both TwigComponent AND LiveComponent cases:
 
-Add a new section under `## TwigComponent Rules`:
+**`InvalidTwigComponent.php`**:
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Kocal\PHPStanSymfonyUX\Tests\Rules\TwigComponent\ExampleRule\Fixture;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+class InvalidTwigComponent  // Example: non-final class
+{
+}
+```
+
+**`InvalidLiveComponent.php`**:
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Kocal\PHPStanSymfonyUX\Tests\Rules\TwigComponent\ExampleRule\Fixture;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+
+#[AsLiveComponent]
+class InvalidLiveComponent
+{
+}
+```
+
+**`ValidTwigComponent.php`**:
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Kocal\PHPStanSymfonyUX\Tests\Rules\TwigComponent\ExampleRule\Fixture;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+final class ValidTwigComponent
+{
+}
+```
+
+**`NotAComponent.php`**:
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Kocal\PHPStanSymfonyUX\Tests\Rules\TwigComponent\ExampleRule\Fixture;
+
+final class NotAComponent  // No attribute = no error
+{
+}
+```
+
+### Step 3: Document in README.md
+
+Add under the appropriate section (`## TwigComponent Rules` or `## LiveComponent Rules`):
+
 ```markdown
-### MyRuleRule
+### ExampleRule
 
-Clear description of what the rule checks and why.
+Description of what the rule checks and why it's important.
 
 \`\`\`yaml
 rules:
-    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\MyRuleRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ExampleRule
 \`\`\`
 
 \`\`\`php
-// Invalid code example
 #[AsTwigComponent]
-final class BadExample
+class BadExample  // Invalid example
 {
 }
 \`\`\`
@@ -183,9 +286,8 @@ final class BadExample
 <br>
 
 \`\`\`php
-// Valid code example
 #[AsTwigComponent]
-final class GoodExample
+final class GoodExample  // Valid example
 {
 }
 \`\`\`
@@ -195,78 +297,151 @@ final class GoodExample
 <br>
 ```
 
-## Useful Commands
-
-### Check and fix syntax + run tests
-```bash
-symfony composer qa-fix
-```
-
-This command will:
-- Verify that changes are syntactically valid
-- Automatically fix code style issues
-- Run all tests to ensure they pass
-
-### Other available commands
-Check the `composer.json` file to see all available commands.
-
-## Code Style Conventions
+## Code Conventions
 
 ### Variable Naming
 
-- **Reflection variables**: Use `$reflClass` for `ClassReflection` objects (not `$classReflection`)
-- **Method reflection**: Use `$reflMethod` for method reflections
-- **Property reflection**: Use descriptive names like `$propertyRefl`
-- **Attribute nodes**: Use `$attribute` for single attributes, `$livePropAttribute` for specific ones
-- **Other nodes**: Use descriptive names like `$method`, `$property`, `$node`
+| Type | Convention | Example |
+|------|------------|---------|
+| Class reflection | `$reflClass` | `$reflClass = $this->reflectionProvider->getClass(...)` |
+| Method reflection | `$reflMethod` or `$<name>MethodRefl` | `$hydrateMethodRefl` |
+| PHP attribute | `$attribute` or `$<name>Attribute` | `$livePropAttribute` |
+| AST node | Descriptive name | `$method`, `$property`, `$node` |
 
-### PHPDoc Comments
+### Rule Structure
 
-- **Public methods**: Always include `@implements Rule<Class_>` or similar on rule classes
-- **Private methods**: Always add a brief description comment explaining the method's purpose
-- **Return types**: Document complex return types with `@return` (e.g., `@return array{name: string, custom: bool}|null`)
-- **Parameters**: Document array parameters with `@param string[]` or similar when applicable
-
-### Error Messages
-
-- **Modal verbs**: Use "must" for requirements (e.g., "Method must be public"), not "should"
-- **Consistency**: Be consistent with message structure across similar rules
-- **Tips**: Always provide actionable tips with `->tip()` to guide users toward solutions
-- **Formatting**: Use double quotes for strings in sprintf, backticks in markdown for code
-
-### Code Structure
-
-- **Early returns**: Check for attribute presence first, return empty array if not found
-- **Null checks**: Check for null/undefined values before proceeding
-- **Error collection**: Use `$errors = []` array and collect all errors before returning
-- **Method order**:
-  1. `getNodeType()`
-  2. `processNode()`
-  3. Private helper methods (alphabetically sorted if multiple)
+1. **Declaration**: `declare(strict_types=1);`
+2. **PHPDoc**: `@implements Rule<Class_>` on the class
+3. **Class**: `final class` with name ending in `Rule`
+4. **Constructor**: Inject `ReflectionProvider` if needed
+5. **Methods** in this order:
+   - `getNodeType()`
+   - `processNode()`
+   - Private methods (alphabetical order)
 
 ### Validation Order in `processNode()`
 
-1. Check if node has required attribute (return `[]` if not)
-2. Check if `namespacedName` exists (when needed)
-3. Initialize error array: `$errors = []`
-4. Get reflection class if needed: `$reflClass = $this->reflectionProvider->getClass(...)`
-5. Iterate over relevant elements (methods, properties, etc.)
-6. Perform validations and collect errors
-7. Return `$errors`
+```php
+public function processNode(Node $node, Scope $scope): array
+{
+    // 1. Check for required attribute
+    if (! AttributeFinder::findAnyAttribute($node, [AsTwigComponent::class, AsLiveComponent::class])) {
+        return [];
+    }
 
-## Best Practices
+    // 2. Check namespacedName if using reflection
+    if ($node->namespacedName === null) {
+        return [];
+    }
 
-1. **Naming**: Rules should have a descriptive name and end with `Rule`
-2. **Identifiers**: Use the format `symfonyUX.twigComponent.descriptiveName` or `symfonyUX.liveComponent.descriptiveName` for error identifiers
-3. **Clear messages**: Error messages must be explicit and include a `tip()` with a suggestion
-4. **Complete tests**: Always test valid cases, invalid cases, and non-components
-5. **Documentation**: Document each rule in the README with concrete examples
-6. **Validation**: Always run `symfony composer qa-fix` before committing
+    // 3. Initialize errors array
+    $errors = [];
 
-## Examples of Existing Rules
+    // 4. Get reflection if needed
+    $reflClass = $this->reflectionProvider->getClass($node->namespacedName->toString());
 
-- `ForbiddenAttributesPropertyRule`: Forbids the `$attributes` property
-- `ForbiddenClassPropertyRule`: Forbids the `$class` property
-- `ClassNameShouldNotEndWithComponentRule`: Class names should not end with "Component"
+    // 5. Iterate and validate
+    foreach ($node->getMethods() as $method) {
+        // validation...
+        $errors[] = RuleErrorBuilder::message('...')
+            ->identifier('symfonyUX.twigComponent.ruleName')
+            ->line($method->getLine())
+            ->tip('...')
+            ->build();
+    }
 
-These rules can serve as references for implementing new rules.
+    // 6. Return errors
+    return $errors;
+}
+```
+
+### Error Messages
+
+- **Modal verb**: Use "must" (obligation), not "should"
+- **Format**: `sprintf()` with `%s` for variables
+- **Tip**: Always include an actionable suggestion
+- **Identifier**: Format `symfonyUX.<package>.<ruleName>` (camelCase)
+
+Examples:
+```php
+// Correct
+RuleErrorBuilder::message('Twig component class must be final.')
+    ->identifier('symfonyUX.twigComponent.classMustBeFinal')
+    ->tip('Add the "final" keyword to the class declaration.')
+
+RuleErrorBuilder::message(sprintf('Method "%s()" must be public.', $methodName))
+    ->identifier('symfonyUX.liveComponent.methodMustBePublic')
+    ->tip(sprintf('Change the visibility of "%s()" to public.', $methodName))
+```
+
+## Using AttributeFinder
+
+`AttributeFinder` is a static utility for searching PHP attributes on AST nodes.
+
+### Available Methods
+
+```php
+// Find a specific attribute
+$attribute = AttributeFinder::findAttribute($node, AsLiveComponent::class);
+
+// Find any of the attributes (TwigComponent OR LiveComponent)
+$attribute = AttributeFinder::findAnyAttribute($node, [
+    AsTwigComponent::class,
+    AsLiveComponent::class,
+]);
+```
+
+### Use Cases
+
+**TwigComponent rule (also applies to LiveComponents)**:
+```php
+if (! AttributeFinder::findAnyAttribute($node, [AsTwigComponent::class, AsLiveComponent::class])) {
+    return [];
+}
+```
+
+**LiveComponent-only rule**:
+```php
+if (! AttributeFinder::findAttribute($node, AsLiveComponent::class)) {
+    return [];
+}
+```
+
+## Existing Rules as References
+
+### Simple Rules (without ReflectionProvider)
+
+- `ClassMustBeFinalRule`: Checks that the class is `final`
+- `ClassNameMustNotEndWithComponentRule`: Checks class name
+- `ForbiddenClassPropertyRule`: Forbids a property named `$class`
+
+### Rules with ReflectionProvider
+
+- `ForbiddenAttributesPropertyRule`: Uses reflection to read attribute parameters
+- `MethodsVisibilityRule`: Analyzes methods via trait reflection
+- `LivePropHydrationMethodsRule`: Complex type validation with reflection
+
+## Development Workflow
+
+```bash
+# 1. Create the rule and tests
+
+# 2. Verify everything works
+symfony composer qa-fix
+
+# 3. If style errors occur, they are automatically fixed
+#    If tests fail, fix and rerun
+
+# 4. Document in README.md
+
+# 5. Commit
+```
+
+## Common Mistakes to Avoid
+
+1. **Forgetting to test with LiveComponent**: Fixtures must include cases for `#[AsLiveComponent]`
+2. **Forgetting `->tip()`**: Every error must have an actionable tip
+3. **Wrong identifier**: Use the format `symfonyUX.<package>.<ruleName>`
+4. **Forgetting `->line()`**: Always indicate the relevant line
+5. **Not checking `namespacedName`**: Required before using `reflectionProvider->getClass()`
+6. **Incorrect neon file**: Don't forget `includes: - ../../../../test-extension.neon`
