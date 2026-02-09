@@ -23,10 +23,7 @@
     "autoload": {
         "psr-4": {
             "Kocal\\PHPStanSymfonyUX\\": "src/"
-        },
-        "files": [
-            "src/deprecated-aliases.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
