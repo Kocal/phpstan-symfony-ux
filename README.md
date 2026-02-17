@@ -665,6 +665,73 @@ final class Alert
 
 <br>
 
+### ForbiddenReadonlyRule
+
+Forbid the use of `readonly` on Twig Component classes and properties, except for constructor-promoted properties (injected services).
+
+Using `readonly` on component classes or properties prevents the TwigComponent system from setting prop values after instantiation.
+Services injected via the constructor can be `readonly` since they are assigned at instantiation time.
+
+Learn more at https://symfony.com/bundles/ux-twig-component/current/index.html#readonly-components-and-immutability
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ForbiddenReadonlyRule
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+final readonly class Alert
+{
+    public string $message;
+}
+```
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+final class Alert
+{
+    public readonly string $message;
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/Alert.php
+namespace App\Twig\Components;
+
+use Psr\Log\LoggerInterface;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+final class Alert
+{
+    public string $message;
+
+    public function __construct(
+        private readonly LoggerInterface $logger,
+    ) {
+    }
+}
+```
+
+:+1:
+
+<br>
+
 ### MethodsVisibilityRule
 
 Enforces that all methods in Twig Components are either public or private, but not protected.
