@@ -27,6 +27,13 @@ includes:
 
 Each rule can be enabled individually by adding it to your `phpstan.neon` or `phpstan.dist.neon` configuration file.
 
+If you prefer to includes all rules at once, you can include `rules.neon` instead:
+
+```yaml
+includes:
+    - vendor/kocal/phpstan-symfony-ux/rules.neon
+```
+
 ## LiveComponent Rules
 
 ### LiveActionMethodsVisibilityRule

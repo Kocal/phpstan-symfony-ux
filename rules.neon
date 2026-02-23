@@ -1,0 +1,15 @@
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LiveActionMethodsVisibilityRule
+    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LiveListenerMethodsVisibilityRule
+    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LivePropHydrationMethodsRule
+    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LivePropModifierMethodRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ClassMustBeFinalRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ClassNameMustNotEndWithComponentRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ExposePublicPropsMustBeFalseRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ForbiddenAttributesPropertyRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ForbiddenClassPropertyRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ForbiddenReadonlyRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\MethodsVisibilityRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\PostMountMethodSignatureRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\PreMountMethodSignatureRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\PublicPropertiesMustBeCamelCaseRule
