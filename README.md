@@ -36,6 +36,51 @@ includes:
 
 ## LiveComponent Rules
 
+### AsLiveComponentArgumentsMustBeValidRule
+
+Enforces that the `#[AsLiveComponent]` attribute arguments have a supported value:
+- `method` must be `get` or `post`, in any case. Before `symfony/ux-live-component` 3.0 only lowercase works, so `GET` throws at runtime without being reported by this rule.
+- `fetchCredentials` (introduced in `symfony/ux-live-component` 2.33) must be `same-origin`, `include` or `omit`
+
+Symfony UX throws an `UnexpectedValueException` when the attribute is instantiated with another value; this rule reports it during static analysis instead.
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\AsLiveComponentArgumentsMustBeValidRule
+```
+
+```php
+// src/Twig/Components/SearchResults.php
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+
+#[AsLiveComponent(method: 'put', fetchCredentials: 'same_origin')]
+final class SearchResults
+{
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/SearchResults.php
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+
+#[AsLiveComponent(method: 'get', fetchCredentials: 'include')]
+final class SearchResults
+{
+}
+```
+
+:+1:
+
+<br>
+
 ### LiveActionMethodsVisibilityRule
 
 Enforces that all methods annotated with `#[LiveAction]` in LiveComponents must be declared as public.

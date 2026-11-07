@@ -1,4 +1,5 @@
 rules:
+    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\AsLiveComponentArgumentsMustBeValidRule
     - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LiveActionMethodsVisibilityRule
     - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LiveListenerMethodsVisibilityRule
     - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LivePropHydrationMethodsRule
