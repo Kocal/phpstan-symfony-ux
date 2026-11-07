@@ -739,6 +739,99 @@ final class Alert
 
 <br>
 
+### FromMethodMethodMustExistRule
+
+Enforces that when a `#[AsTwigComponent]` or `#[AsLiveComponent]` attribute specifies a dynamic template via `FromMethod`:
+- The method referenced must exist in the component class
+- The method must be declared as public
+- The method must return a `string` (the template path)
+
+This rule validates the new dynamic template resolution feature introduced in `symfony/ux-twig-component` 2.33.
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\FromMethodMethodMustExistRule
+```
+
+```php
+// src/Twig/Components/SearchResults.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\FromMethod;
+
+// Error: Method 'nonExistentMethod' does not exist
+#[AsTwigComponent(template: new FromMethod('nonExistentMethod'))]
+final class SearchResults
+{
+}
+```
+
+```php
+// src/Twig/Components/SearchResults.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\FromMethod;
+
+#[AsTwigComponent(template: new FromMethod('getTemplate'))]
+final class SearchResults
+{
+    // Error: Method must be public
+    private function getTemplate(): string
+    {
+        return 'components/SearchResults.html.twig';
+    }
+}
+```
+
+```php
+// src/Twig/Components/SearchResults.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\FromMethod;
+
+#[AsTwigComponent(template: new FromMethod('getTemplate'))]
+final class SearchResults
+{
+    // Error: Method must return string
+    public function getTemplate(): array
+    {
+        return ['components/SearchResults.html.twig'];
+    }
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/SearchResults.php
+namespace App\Twig\Components;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\FromMethod;
+
+#[AsTwigComponent(template: new FromMethod('getTemplate'))]
+final class SearchResults
+{
+    public string $layout = 'rows';
+
+    public function getTemplate(): string
+    {
+        return 'rows' === $this->layout
+            ? 'components/SearchResults/rows.html.twig'
+            : 'components/SearchResults/grid.html.twig';
+    }
+}
+```
+
+:+1:
+
+<br>
+
 ### MethodsVisibilityRule
 
 Enforces that all methods in Twig Components are either public or private, but not protected.

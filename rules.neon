@@ -9,6 +9,7 @@ rules:
     - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ForbiddenAttributesPropertyRule
     - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ForbiddenClassPropertyRule
     - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ForbiddenReadonlyRule
+    - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\FromMethodMethodMustExistRule
     - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\MethodsVisibilityRule
     - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\PostMountMethodSignatureRule
     - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\PreMountMethodSignatureRule
