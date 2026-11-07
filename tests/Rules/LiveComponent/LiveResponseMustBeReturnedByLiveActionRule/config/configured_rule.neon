@@ -1,0 +1,9 @@
+includes:
+    - ../../../../test-extension.neon
+
+parameters:
+    scanFiles:
+        - ../../../../stubs/LiveResponse.php
+
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LiveResponseMustBeReturnedByLiveActionRule

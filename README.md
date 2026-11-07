@@ -397,6 +397,80 @@ final class SearchComponent
 
 <br>
 
+### LiveResponseMustBeReturnedByLiveActionRule
+
+Enforces that a `LiveResponse` (introduced in `symfony/ux-live-component` 3.5) is only returned by a `#[LiveAction]` or a `#[LiveListener]` method:
+- The default action (`__invoke()`, or the method set in `#[AsLiveComponent(defaultAction: '...')]`) must not return a `LiveResponse`, since it runs on every re-render and Symfony UX throws a `LogicException` at runtime
+- A public method returning a `LiveResponse` must have the `#[LiveAction]` or `#[LiveListener]` attribute, otherwise the browser cannot call it as an action
+
+Private and protected methods are ignored, so they can build a `LiveResponse` for an action.
+
+```yaml
+rules:
+    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LiveResponseMustBeReturnedByLiveActionRule
+```
+
+```php
+// src/Twig/Components/Notification.php
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\LiveResponse;
+
+#[AsLiveComponent]
+final class Notification
+{
+    // Error: the default action must not return a LiveResponse
+    public function __invoke(): LiveResponse
+    {
+        return LiveResponse::remove();
+    }
+
+    // Error: the method is not a LiveAction
+    public function export(): LiveResponse
+    {
+        return LiveResponse::downloadUrl('/notifications/export.csv');
+    }
+}
+```
+
+:x:
+
+<br>
+
+```php
+// src/Twig/Components/Notification.php
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
+use Symfony\UX\LiveComponent\Attribute\LiveListener;
+use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Symfony\UX\LiveComponent\LiveResponse;
+
+#[AsLiveComponent]
+final class Notification
+{
+    use DefaultActionTrait;
+
+    #[LiveAction]
+    public function export(): LiveResponse
+    {
+        return LiveResponse::downloadUrl('/notifications/export.csv');
+    }
+
+    #[LiveListener('notification:read')]
+    public function dismiss(): LiveResponse
+    {
+        return LiveResponse::remove();
+    }
+}
+```
+
+:+1:
+
+<br>
+
 ## TwigComponent Rules
 
 > [!NOTE]
