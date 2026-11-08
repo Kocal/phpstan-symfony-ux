@@ -62,7 +62,7 @@ final class LivePropHydrationMethodsRule implements Rule
             $propertyName = $property->props[0]->name->toString();
 
             // Ensure that "dehydrateWith" is specified when "hydrateWith" is specified
-            if ($hydrateWith !== null && $dehydrateWith === null) {
+            if ($dehydrateWith === null) {
                 $errors[] = RuleErrorBuilder::message(
                     sprintf(
                         'Property "%s" has a #[LiveProp] attribute with "hydrateWith" but is missing "dehydrateWith".',
@@ -78,7 +78,7 @@ final class LivePropHydrationMethodsRule implements Rule
             }
 
             // Ensure that "hydrateWith" is specified when "dehydrateWith" is specified
-            if ($dehydrateWith !== null && $hydrateWith === null) {
+            if ($hydrateWith === null) {
                 $errors[] = RuleErrorBuilder::message(
                     sprintf(
                         'Property "%s" has a #[LiveProp] attribute with "dehydrateWith" but is missing "hydrateWith".',
@@ -92,9 +92,6 @@ final class LivePropHydrationMethodsRule implements Rule
 
                 continue;
             }
-
-            // At this point, both $hydrateWith and $dehydrateWith are guaranteed to be non-null (validated above)
-            assert($hydrateWith !== null && $dehydrateWith !== null);
 
             // Get method reflections using PHPStan's reflection system
             $hydrateMethodExists = $reflClass->hasMethod($hydrateWith);

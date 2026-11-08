@@ -16,7 +16,7 @@ use PhpParser\Node\Stmt\Property;
  */
 final class AttributeFinder
 {
-    public static function findAttribute(ClassMethod | Property | ClassLike | Param $node, string $desiredAttributeClass): ?Attribute
+    public static function findAttribute(ClassMethod|Property|ClassLike|Param $node, string $desiredAttributeClass): ?Attribute
     {
         $attributes = self::findAttributes($node);
 
@@ -38,7 +38,7 @@ final class AttributeFinder
      *
      * @param string[] $desiredAttributeClasses
      */
-    public static function findAnyAttribute(ClassMethod | Property | ClassLike | Param $node, array $desiredAttributeClasses): ?Attribute
+    public static function findAnyAttribute(ClassMethod|Property|ClassLike|Param $node, array $desiredAttributeClasses): ?Attribute
     {
         $attributes = self::findAttributes($node);
 
@@ -58,7 +58,7 @@ final class AttributeFinder
     /**
      * @return Attribute[]
      */
-    private static function findAttributes(ClassMethod | Property | ClassLike | Param $node): array
+    private static function findAttributes(ClassMethod|Property|ClassLike|Param $node): array
     {
         $attributes = [];
 
