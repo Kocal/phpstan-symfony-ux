@@ -3,6 +3,7 @@ rules:
     - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LiveListenerMethodsVisibilityRule
     - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LivePropHydrationMethodsRule
     - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LivePropModifierMethodRule
+    - Kocal\PHPStanSymfonyUX\Rules\LiveComponent\LiveResponseMustBeReturnedByLiveActionRule
     - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ClassMustBeFinalRule
     - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ClassNameMustNotEndWithComponentRule
     - Kocal\PHPStanSymfonyUX\Rules\TwigComponent\ExposePublicPropsMustBeFalseRule
