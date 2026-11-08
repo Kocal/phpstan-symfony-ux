@@ -52,7 +52,7 @@ final class LivePropModifierMethodRule implements Rule
             }
 
             // Extract modifier method name from the attribute
-            $modifier = $this->getArgumentValue($livePropAttribute, 'modifier');
+            $modifier = AttributeFinder::findStringArgumentValue($livePropAttribute, 'modifier');
 
             // Skip if modifier argument is not defined
             if ($modifier === null) {
@@ -177,21 +177,5 @@ final class LivePropModifierMethodRule implements Rule
         }
 
         return $errors;
-    }
-
-    /**
-     * Extracts the value of a named argument from a LiveProp attribute.
-     */
-    private function getArgumentValue(Node\Attribute $attribute, string $argumentName): ?string
-    {
-        foreach ($attribute->args as $arg) {
-            if ($arg->name && $arg->name->toString() === $argumentName) {
-                if ($arg->value instanceof Node\Scalar\String_) {
-                    return $arg->value->value;
-                }
-            }
-        }
-
-        return null;
     }
 }

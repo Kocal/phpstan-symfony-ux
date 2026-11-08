@@ -86,16 +86,12 @@ final class LiveResponseMustBeReturnedByLiveActionRule implements Rule
      */
     private function getDefaultAction(Node\Attribute $attribute): ?string
     {
-        foreach ($attribute->args as $index => $arg) {
-            $isDefaultActionArg = $arg->name === null
-                ? $index === 2
-                : $arg->name->toString() === 'defaultAction';
+        $defaultActionArg = AttributeFinder::findArgument($attribute, 'defaultAction', 2);
 
-            if ($isDefaultActionArg) {
-                return $arg->value instanceof String_ ? trim($arg->value->value, '()') : null;
-            }
+        if (! $defaultActionArg) {
+            return '__invoke';
         }
 
-        return '__invoke';
+        return $defaultActionArg->value instanceof String_ ? trim($defaultActionArg->value->value, '()') : null;
     }
 }

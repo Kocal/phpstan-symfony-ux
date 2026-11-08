@@ -50,8 +50,8 @@ final class LivePropHydrationMethodsRule implements Rule
             }
 
             // Extract hydration method names from the attribute
-            $hydrateWith = $this->getArgumentValue($livePropAttribute, 'hydrateWith');
-            $dehydrateWith = $this->getArgumentValue($livePropAttribute, 'dehydrateWith');
+            $hydrateWith = AttributeFinder::findStringArgumentValue($livePropAttribute, 'hydrateWith');
+            $dehydrateWith = AttributeFinder::findStringArgumentValue($livePropAttribute, 'dehydrateWith');
 
             // Skip if both arguments are not defined
             if ($hydrateWith === null && $dehydrateWith === null) {
@@ -278,21 +278,5 @@ final class LivePropHydrationMethodsRule implements Rule
         }
 
         return $errors;
-    }
-
-    /**
-     * Extracts the value of a named argument from a LiveProp attribute.
-     */
-    private function getArgumentValue(Node\Attribute $attribute, string $argumentName): ?string
-    {
-        foreach ($attribute->args as $arg) {
-            if ($arg->name && $arg->name->toString() === $argumentName) {
-                if ($arg->value instanceof Node\Scalar\String_) {
-                    return $arg->value->value;
-                }
-            }
-        }
-
-        return null;
     }
 }

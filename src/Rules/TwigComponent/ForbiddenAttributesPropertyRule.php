@@ -74,15 +74,11 @@ final class ForbiddenAttributesPropertyRule implements Rule
      */
     private function getAttributesVarName(Node\Attribute $attribute): ?array
     {
-        foreach ($attribute->args as $arg) {
-            if ($arg->name && $arg->name->toString() === 'attributesVar') {
-                if ($arg->value instanceof Node\Scalar\String_) {
-                    return [
-                        'name' => $arg->value->value,
-                        'custom' => true,
-                    ];
-                }
-            }
+        if (($attributesVar = AttributeFinder::findStringArgumentValue($attribute, 'attributesVar')) !== null) {
+            return [
+                'name' => $attributesVar,
+                'custom' => true,
+            ];
         }
 
         $reflAttribute = $this->reflectionProvider->getClass(AsTwigComponent::class);

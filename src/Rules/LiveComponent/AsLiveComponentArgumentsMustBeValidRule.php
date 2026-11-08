@@ -35,7 +35,7 @@ final class AsLiveComponentArgumentsMustBeValidRule implements Rule
         $errors = [];
         $positionOffset = $this->isDeprecatedCsrfPassedPositionally($attribute, $scope) ? 1 : 0;
 
-        if ($methodArg = $this->findArgument($attribute, 'method', 6 + $positionOffset)) {
+        if ($methodArg = AttributeFinder::findArgument($attribute, 'method', 6 + $positionOffset)) {
             foreach ($scope->getType($methodArg->value)->getConstantStrings() as $method) {
                 if (in_array(strtolower($method->getValue()), self::METHODS, true)) {
                     continue;
@@ -51,7 +51,7 @@ final class AsLiveComponentArgumentsMustBeValidRule implements Rule
             }
         }
 
-        if ($fetchCredentialsArg = $this->findArgument($attribute, 'fetchCredentials', 8 + $positionOffset)) {
+        if ($fetchCredentialsArg = AttributeFinder::findArgument($attribute, 'fetchCredentials', 8 + $positionOffset)) {
             foreach ($scope->getType($fetchCredentialsArg->value)->getConstantStrings() as $fetchCredentials) {
                 if (in_array($fetchCredentials->getValue(), self::FETCH_CREDENTIALS, true)) {
                     continue;
@@ -68,21 +68,6 @@ final class AsLiveComponentArgumentsMustBeValidRule implements Rule
         }
 
         return $errors;
-    }
-
-    private function findArgument(Node\Attribute $attribute, string $name, int $position): ?Node\Arg
-    {
-        foreach ($attribute->args as $index => $arg) {
-            $isWantedArg = $arg->name === null
-                ? $index === $position
-                : $arg->name->toString() === $name;
-
-            if ($isWantedArg) {
-                return $arg;
-            }
-        }
-
-        return null;
     }
 
     // symfony/ux-live-component 2.x still accepts the deprecated "csrf" boolean as 6th argument, shifting the next ones

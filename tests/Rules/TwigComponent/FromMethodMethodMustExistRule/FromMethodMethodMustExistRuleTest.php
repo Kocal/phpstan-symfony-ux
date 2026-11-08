@@ -41,6 +41,20 @@ final class FromMethodMethodMustExistRuleTest extends RuleTestCase
         );
     }
 
+    public function testNonExistentMethodPositionalTemplate(): void
+    {
+        $this->analyse(
+            [__DIR__ . '/Fixture/InvalidTwigComponentPositionalTemplate.php'],
+            [
+                [
+                    'Component "Kocal\PHPStanSymfonyUX\Tests\Rules\TwigComponent\FromMethodMethodMustExistRule\Fixture\InvalidTwigComponentPositionalTemplate" references non-existent method "nonExistentMethod()" in FromMethod.',
+                    10,
+                    'Create the public method "nonExistentMethod()" in the component class.',
+                ],
+            ]
+        );
+    }
+
     public function testPrivateMethodTwigComponent(): void
     {
         $this->analyse(
