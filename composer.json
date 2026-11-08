@@ -36,8 +36,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^11.1",
-        "symfony/ux-live-component": "^2.0",
-        "symfony/ux-twig-component": "^2.0",
+        "symfony/ux-live-component": "^2.33 || ^3.0",
+        "symfony/ux-twig-component": "^2.33 || ^3.0",
         "symplify/easy-coding-standard": "^13.0"
     },
     "extra": {
