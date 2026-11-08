@@ -55,20 +55,16 @@ class ExposePublicPropsMustBeFalseRule implements Rule
      */
     private function getExposePublicPropsValue(Node\Attribute $attribute): ?bool
     {
-        foreach ($attribute->args as $arg) {
-            if ($arg->name && $arg->name->toString() === 'exposePublicProps') {
-                if ($arg->value instanceof Node\Expr\ConstFetch) {
-                    $constantName = $arg->value->name->toString();
+        $arg = AttributeFinder::findArgument($attribute, 'exposePublicProps');
 
-                    return match (strtolower($constantName)) {
-                        'true' => true,
-                        'false' => false,
-                        default => null,
-                    };
-                }
-            }
+        if (! $arg?->value instanceof Node\Expr\ConstFetch) {
+            return null;
         }
 
-        return null;
+        return match (strtolower($arg->value->name->toString())) {
+            'true' => true,
+            'false' => false,
+            default => null,
+        };
     }
 }

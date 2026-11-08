@@ -389,6 +389,12 @@ $attribute = AttributeFinder::findAnyAttribute($node, [
     AsTwigComponent::class,
     AsLiveComponent::class,
 ]);
+
+// Find an argument by name, or by zero-based position when passed positionally (optional)
+$methodArg = AttributeFinder::findArgument($attribute, 'method', 6);
+
+// Get the string literal value of a named argument, null otherwise
+$modifier = AttributeFinder::findStringArgumentValue($livePropAttribute, 'modifier');
 ```
 
 ### Use Cases

@@ -108,18 +108,10 @@ final class FromMethodMethodMustExistRule implements Rule
 
     private function extractFromMethodName(Node\Attribute $attribute): ?string
     {
-        foreach ($attribute->args as $arg) {
-            if ($arg->name && $arg->name->toString() === 'template') {
-                return $this->extractMethodNameFromNewExpression($arg->value);
-            }
-        }
-
         // $template is the 2nd constructor parameter of both AsTwigComponent and AsLiveComponent
-        if (isset($attribute->args[1]) && $attribute->args[1]->name === null) {
-            return $this->extractMethodNameFromNewExpression($attribute->args[1]->value);
-        }
+        $templateArg = AttributeFinder::findArgument($attribute, 'template', 1);
 
-        return null;
+        return $templateArg ? $this->extractMethodNameFromNewExpression($templateArg->value) : null;
     }
 
     private function extractMethodNameFromNewExpression(Node\Expr $expr): ?string

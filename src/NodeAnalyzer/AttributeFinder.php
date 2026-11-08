@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Kocal\PHPStanSymfonyUX\NodeAnalyzer;
 
+use PhpParser\Node\Arg;
 use PhpParser\Node\Attribute;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Param;
+use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Property;
@@ -53,6 +55,34 @@ final class AttributeFinder
         }
 
         return null;
+    }
+
+    /**
+     * @param int|null $position Zero-based position when the argument is passed positionally, null to match by name only
+     */
+    public static function findArgument(Attribute $attribute, string $name, ?int $position = null): ?Arg
+    {
+        foreach ($attribute->args as $index => $arg) {
+            $isWantedArg = $arg->name === null
+                ? $index === $position
+                : $arg->name->toString() === $name;
+
+            if ($isWantedArg) {
+                return $arg;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the value of the named argument, or null when it is missing or not a string literal.
+     */
+    public static function findStringArgumentValue(Attribute $attribute, string $name): ?string
+    {
+        $arg = self::findArgument($attribute, $name);
+
+        return $arg?->value instanceof String_ ? $arg->value->value : null;
     }
 
     /**
